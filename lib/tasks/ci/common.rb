@@ -177,7 +177,7 @@ namespace :ci do
 
     task :run_tests, [:flavor, :cihome, :mocked] do |t, attr|
       flavors = attr[:flavor]
-      cihome = attr[:cihome]
+      cihome = attr[:cihome] || "#{ENV['SDK_HOME']}/ci" || Dir.pwd
       mocked = attr[:mocked] || false
       filter = ENV['NOSE_FILTER'] || '1'
       nose_command = in_venv ? 'venv/bin/nosetests' : 'nosetests'
