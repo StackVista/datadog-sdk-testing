@@ -102,10 +102,12 @@ namespace :generate do
     sh "cp #{gem_home}/lib/config/metadata.csv #{ENV['SDK_HOME']}/#{args[:option]}/metadata.csv"
     sh "cp #{gem_home}/lib/config/requirements.txt #{ENV['SDK_HOME']}/#{args[:option]}/requirements.txt"
     sh "cp #{gem_home}/lib/config/README.md #{ENV['SDK_HOME']}/#{args[:option]}/README.md"
-    sh "find #{ENV['SDK_HOME']}/#{args[:option]} -type f -exec sed -i '' \"s/skeleton/#{args[:option]}/g\" {} \\;"
-    sh "find #{ENV['SDK_HOME']}/#{args[:option]} -type f -exec sed -i '' \"s/Skeleton/#{capitalized}/g\" {} \\;"
-    sh "sed -i '' \"s/skeleton/#{args[:option]}/g\" #{ENV['SDK_HOME']}/#{args[:option]}/ci/#{args[:option]}.rake"
-    sh "sed -i '' \"s/Skeleton/#{capitalized}/g\" #{ENV['SDK_HOME']}/#{args[:option]}/ci/#{args[:option]}.rake"
+    Dir.glob("#{ENV['SDK_HOME']}/#{args[:option]}/**/*") do |f|
+      if File.file?(f)
+        sed(f, 'skeleton', "#{args[:option]}", 'g')
+        sed(f, 'Skeleton', "#{capitalized}", 'g')
+      end
+    end
     sh "git add #{ENV['SDK_HOME']}/#{args[:option]}/"
 
     new_file = "#{ENV['SDK_HOME']}/circle.yml.new"
