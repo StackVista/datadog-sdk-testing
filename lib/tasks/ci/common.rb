@@ -12,6 +12,14 @@ def check_env
   abort 'SDK_HOME env variable must be defined in your Rakefile to used this gem.' unless ENV['SDK_HOME']
 end
 
+def sed(source, a, b, mods)
+  if RUBY_PLATFORM.include? 'darwin'
+    sh "sed -i '' \"s/#{a}/#{b}/#{mods}\" #{source}"
+  else
+    sh "sed -i \"s/#{a}/#{b}/#{mods}\" #{source}"
+  end
+end
+
 def sleep_for(secs)
   puts "Sleeping for #{secs}s".blue
   sleep(secs)
