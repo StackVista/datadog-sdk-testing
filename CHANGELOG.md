@@ -5,6 +5,13 @@
 
 ### Changes
 
+* [bugfix] Fixing test launcher so that it now knows how to find nose tests (regression in 0.2.0).
+
+0.2.0/ 2016.06.16
+==================
+
+### Changes
+
 * [improvement] Keeping `ci/` Rakefile in SDK integration package folder. Not the SDK integrations root folder.
 * [bugfix] wrap sed in function to allow compatibility with GNU and BSD seds.
 * [bugfix] fallback to SDK_HOME environment variable if attribute not define on `run_tests` task.
