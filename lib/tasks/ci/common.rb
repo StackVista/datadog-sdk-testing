@@ -57,8 +57,8 @@ def test_files(sdk_dir)
   end
 end
 
-def integration_tests(ci_dir)
-  sdk_dir = File.join(ci_dir, '..')
+def integration_tests(root_dir)
+  sdk_dir = ENV['SDK_HOME'] || root_dir
   integrations = []
   untested = []
   testable = []
@@ -183,9 +183,9 @@ namespace :ci do
       t.reenable
     end
 
-    task :run_tests, [:flavor, :cihome, :mocked] do |t, attr|
+    task :run_tests, [:flavor, :mocked] do |t, attr|
       flavors = attr[:flavor]
-      cihome = attr[:cihome] || "#{ENV['SDK_HOME']}/ci" || Dir.pwd
+      sdkhome = ENV['SDK_HOME'] || Dir.pwd
       mocked = attr[:mocked] || false
       filter = ENV['NOSE_FILTER'] || '1'
       nose_command = in_venv ? 'venv/bin/nosetests' : 'nosetests'
@@ -197,7 +197,7 @@ namespace :ci do
                "(requires in ['#{flavors.join("','")}']) and #{filter} and #{mock_filter}"
              end
 
-      tests_directory, = integration_tests(cihome)
+      tests_directory, = integration_tests(sdkhome)
       unless flavors.include?('default')
         tests_directory = tests_directory.reject do |test|
           /.*#{flavors}.*$/.match(test).nil?
