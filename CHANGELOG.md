@@ -1,6 +1,14 @@
 # CHANGELOG
 
-0.1.0/ 2016.06.16
+0.2.0/ 2016.06.16
+==================
+
+### Changes
+
+* [improvement] Keeping `ci/` Rakefile in SDK integration package folder. Not the SDK integrations root folder.
+* [bugfix] wrap sed in function to allow compatibility with GNU and BSD seds.
+
+0.1.1/ 2016.06.16
 ==================
 
 ### Changes
