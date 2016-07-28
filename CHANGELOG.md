@@ -1,13 +1,20 @@
 # CHANGELOG
 
-0.2.0/ 2016.06.16
+0.2.2/ 2016.07.28
+==================
+
+### Changes
+
+* [bugfix] Ensure requirements are installed for `default` test as well.
+
+0.2.1/ 2016.07.25
 ==================
 
 ### Changes
 
 * [bugfix] Fixing test launcher so that it now knows how to find nose tests (regression in 0.2.0).
 
-0.2.0/ 2016.06.16
+0.2.0/ 2016.07.25
 ==================
 
 ### Changes
