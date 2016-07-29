@@ -19,23 +19,11 @@ namespace :ci do
       end
     end
 
-    task install: ['ci:common:install'] do
-      sdk_dir = ENV['SDK_HOME'] || Dir.pwd
-      reqs = Dir.glob(File.join(sdk_dir, '**/requirements.txt')).reject do |path|
-        !%r{#{sdk_dir}/embedded/.*$}.match(path).nil? || !%r{#{sdk_dir}\/venv\/.*$}.match(path).nil?
-      end
-
-      use_venv = in_venv
-      reqs.each do |req|
-        install_requirements(req,
-                             "--cache-dir #{ENV['PIP_CACHE']}",
-                             "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
-      end
-    end
+    task install: ['ci:common:install']
 
     task before_script: ['ci:common:before_script']
 
-    task lint: ['rubocop'] do
+    task lint: ['ci:common:install', 'rubocop'] do
       check_env
       sh %(flake8 #{ENV['SDK_HOME']})
       sh %(find #{ENV['SDK_HOME']} -name '*.py' -not\

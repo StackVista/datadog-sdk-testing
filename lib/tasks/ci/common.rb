@@ -150,6 +150,8 @@ namespace :ci do
       section('INSTALL')
       use_venv = in_venv
       pip_command = use_venv ? 'venv/bin/pip' : 'pip'
+      sdk_dir = ENV['SDK_HOME'] || Dir.pwd
+
       sh %(#{'python -m ' if Gem.win_platform?}#{pip_command} install --upgrade pip setuptools)
       install_requirements('requirements.txt',
                            "--cache-dir #{ENV['PIP_CACHE']}",
@@ -160,6 +162,17 @@ namespace :ci do
       install_requirements('requirements-test.txt',
                            "--cache-dir #{ENV['PIP_CACHE']}",
                            "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+
+      reqs = Dir.glob(File.join(sdk_dir, '**/requirements.txt')).reject do |path|
+        !%r{#{sdk_dir}/embedded/.*$}.match(path).nil? || !%r{#{sdk_dir}\/venv\/.*$}.match(path).nil?
+      end
+
+      reqs.each do |req|
+        install_requirements(req,
+                             "--cache-dir #{ENV['PIP_CACHE']}",
+                             "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+      end
+
       t.reenable
     end
 
