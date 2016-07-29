@@ -91,44 +91,7 @@ namespace :generate do
   desc 'Setup a development environment for the SDK'
   task :skeleton, :option do |_, args|
     check_env
-    puts "generating skeleton files for #{args[:option]}"
-    gem_home = Bundler.rubygems.find_name('datadog-sdk-testing').first.full_gem_path
-    capitalized = args[:option].capitalize
-    sh "mkdir -p #{ENV['SDK_HOME']}/#{args[:option]}/ci"
-    sh "cp #{gem_home}/lib/config/ci/skeleton.rake #{ENV['SDK_HOME']}/#{args[:option]}/ci/#{args[:option]}.rake"
-    sh "cp #{gem_home}/lib/config/manifest.json #{ENV['SDK_HOME']}/#{args[:option]}/manifest.json"
-    sh "cp #{gem_home}/lib/config/check.py #{ENV['SDK_HOME']}/#{args[:option]}/check.py"
-    sh "cp #{gem_home}/lib/config/test_skeleton.py #{ENV['SDK_HOME']}/#{args[:option]}/test_#{args[:option]}.py"
-    sh "cp #{gem_home}/lib/config/metadata.csv #{ENV['SDK_HOME']}/#{args[:option]}/metadata.csv"
-    sh "cp #{gem_home}/lib/config/requirements.txt #{ENV['SDK_HOME']}/#{args[:option]}/requirements.txt"
-    sh "cp #{gem_home}/lib/config/README.md #{ENV['SDK_HOME']}/#{args[:option]}/README.md"
-    Dir.glob("#{ENV['SDK_HOME']}/#{args[:option]}/**/*") do |f|
-      if File.file?(f)
-        sed(f, 'skeleton', "#{args[:option]}", 'g')
-        sed(f, 'Skeleton', "#{capitalized}", 'g')
-      end
-    end
-    sh "git add #{ENV['SDK_HOME']}/#{args[:option]}/"
-
-    new_file = "#{ENV['SDK_HOME']}/circle.yml.new"
-    File.open(new_file, 'w') do |fo|
-      File.foreach("#{ENV['SDK_HOME']}/circle.yml") do |line|
-        fo.puts "        - rake ci:run[#{args[:option]}]" if line =~ /bundle\ exec\ rake\ requirements/
-        fo.puts line
-      end
-    end
-    File.delete("#{ENV['SDK_HOME']}/circle.yml")
-    File.rename(new_file, "#{ENV['SDK_HOME']}/circle.yml")
-
-    new_file = "#{ENV['SDK_HOME']}/.travis.yml.new"
-    File.open(new_file, 'w') do |fo|
-      File.foreach("#{ENV['SDK_HOME']}/.travis.yml") do |line|
-        fo.puts "  - rake ci:run[#{args[:option]}]" if line =~ /bundle\ exec\ rake\ requirements/
-        fo.puts line
-      end
-    end
-    File.delete("#{ENV['SDK_HOME']}/.travis.yml")
-    File.rename(new_file, "#{ENV['SDK_HOME']}/.travis.yml")
+    create_skeleton(args[:option])
   end
 end
 

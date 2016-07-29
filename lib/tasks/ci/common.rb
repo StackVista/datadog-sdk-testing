@@ -74,6 +74,52 @@ def integration_tests(root_dir)
   [testable, untested]
 end
 
+def create_skeleton(integration)
+  if File.directory?("#{ENV['SDK_HOME']}/#{integration}")
+    puts "directory already exists for #{integration} - bailing out."
+    return
+  end
+
+  puts "generating skeleton files for #{integration}"
+  gem_home = Bundler.rubygems.find_name('datadog-sdk-testing').first.full_gem_path
+  capitalized = integration.capitalize
+  sh "mkdir -p #{ENV['SDK_HOME']}/#{integration}/ci"
+  sh "cp #{gem_home}/lib/config/ci/skeleton.rake #{ENV['SDK_HOME']}/#{integration}/ci/#{integration}.rake"
+  sh "cp #{gem_home}/lib/config/manifest.json #{ENV['SDK_HOME']}/#{integration}/manifest.json"
+  sh "cp #{gem_home}/lib/config/check.py #{ENV['SDK_HOME']}/#{integration}/check.py"
+  sh "cp #{gem_home}/lib/config/test_skeleton.py #{ENV['SDK_HOME']}/#{integration}/test_#{integration}.py"
+  sh "cp #{gem_home}/lib/config/metadata.csv #{ENV['SDK_HOME']}/#{integration}/metadata.csv"
+  sh "cp #{gem_home}/lib/config/requirements.txt #{ENV['SDK_HOME']}/#{integration}/requirements.txt"
+  sh "cp #{gem_home}/lib/config/README.md #{ENV['SDK_HOME']}/#{integration}/README.md"
+  Dir.glob("#{ENV['SDK_HOME']}/#{integration}/**/*") do |f|
+    if File.file?(f)
+      sed(f, 'skeleton', "#{integration}", 'g')
+      sed(f, 'Skeleton', "#{capitalized}", 'g')
+    end
+  end
+  sh "git add #{ENV['SDK_HOME']}/#{integration}/"
+
+  new_file = "#{ENV['SDK_HOME']}/circle.yml.new"
+  File.open(new_file, 'w') do |fo|
+    File.foreach("#{ENV['SDK_HOME']}/circle.yml") do |line|
+      fo.puts "        - rake ci:run[#{integration}]" if line =~ /bundle\ exec\ rake\ requirements/
+      fo.puts line
+    end
+  end
+  File.delete("#{ENV['SDK_HOME']}/circle.yml")
+  File.rename(new_file, "#{ENV['SDK_HOME']}/circle.yml")
+
+  new_file = "#{ENV['SDK_HOME']}/.travis.yml.new"
+  File.open(new_file, 'w') do |fo|
+    File.foreach("#{ENV['SDK_HOME']}/.travis.yml") do |line|
+      fo.puts "  - rake ci:run[#{integration}]" if line =~ /bundle\ exec\ rake\ requirements/
+      fo.puts line
+    end
+  end
+  File.delete("#{ENV['SDK_HOME']}/.travis.yml")
+  File.rename(new_file, "#{ENV['SDK_HOME']}/.travis.yml")
+end
+
 # helper class to wait for TCP/HTTP services to boot
 class Wait
   DEFAULT_TIMEOUT = 10
