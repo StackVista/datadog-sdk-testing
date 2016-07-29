@@ -55,7 +55,7 @@ desc 'Setup git hooks'
 task 'setup_hooks' do
   check_env
   gem_home = Bundler.rubygems.find_name('datadog-sdk-testing').first.full_gem_path
-  sh "ln -sf #{gem_home}/lib/tasks/ci/hooks/pre-commit.py #{ENV['SDK_HOME']}}/.git/hooks/pre-commit"
+  sh "ln -sf #{gem_home}/lib/tasks/ci/hooks/pre-commit.py #{ENV['SDK_HOME']}/.git/hooks/pre-commit"
 end
 
 desc 'Pull latest agent code'
