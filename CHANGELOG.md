@@ -1,5 +1,14 @@
 # CHANGELOG
 
+0.2.3/ 2016.07.29
+==================
+
+### Changes
+
+* [bugfix] Reqs required before lint task, make sure they're satisfied.
+* [bugfix] Do not allow overwriting if integration already exists with same name.
+* [bugfix] Fix hook setup task - remove extra `}`.
+
 0.2.2/ 2016.07.28
 ==================
 
