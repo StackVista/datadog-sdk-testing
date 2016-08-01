@@ -1,5 +1,13 @@
 # CHANGELOG
 
+0.2.4/ 2016.08.01
+==================
+
+### Changes
+
+* [bugfix] When the [default] task runs, ensure the volatile dir exists.
+* [improvement] Metadata csv should have a descriptive header for each field.
+
 0.2.3/ 2016.07.29
 ==================
 
