@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.2.5/ 2016.08.03
+==================
+
+### Changes
+
+* [bugfix] The [lint] task may also install requirements, ensure the volatile dir exists.
+
 0.2.4/ 2016.08.01
 ==================
 
