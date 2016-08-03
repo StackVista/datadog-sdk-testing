@@ -16,7 +16,7 @@ instance = {
 
 # NOTE: Feel free to declare multiple test classes if needed
 
-@attr(requires='skeleton', mock=False)  # set mock to True if appropriate
+@attr(requires='skeleton')
 class TestSkeleton(AgentCheckTest):
     """Basic Test for skeleton integration."""
     CHECK_NAME = 'skeleton'

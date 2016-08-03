@@ -97,21 +97,14 @@ end
 
 namespace :ci do
   desc 'Run integration tests'
-  task :run, [:flavor, :mocked] do |_, args|
+  task :run, [:flavor] do |_, args|
     check_env
     puts 'Assuming you are running these tests locally' unless ENV['TRAVIS']
     flavor = args[:flavor] || ENV['TRAVIS_FLAVOR'] || 'default'
-    mocked = args[:mocked] || false
     flavors = flavor.split(',')
     flavors.each do |f|
-      Rake::Task["ci:#{f}:execute"].invoke(mocked)
+      Rake::Task["ci:#{f}:execute"].invoke
     end
-  end
-
-  desc 'Run mock tests'
-  task :run_mocks, [:flavor] do |_, args|
-    check_env
-    Rake::Task["ci:run"].invoke(args[:flavor], true)
   end
 end
 

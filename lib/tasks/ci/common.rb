@@ -242,18 +242,16 @@ namespace :ci do
       t.reenable
     end
 
-    task :run_tests, [:flavor, :mocked] do |t, attr|
+    task :run_tests, [:flavor] do |t, attr|
       flavors = attr[:flavor]
       sdkhome = ENV['SDK_HOME'] || Dir.pwd
-      mocked = attr[:mocked] || false
       filter = ENV['NOSE_FILTER'] || '1'
       nose_command = in_venv ? 'venv/bin/nosetests' : 'nosetests'
 
-      mock_filter = mocked ? "mock" : "not mock"
       nose = if flavors.include?('default')
-               "(not requires) and #{filter} and #{mock_filter}"
+               "(not requires) and #{filter}"
              else
-               "(requires in ['#{flavors.join("','")}']) and #{filter} and #{mock_filter}"
+               "(requires in ['#{flavors.join("','")}']) and #{filter}"
              end
 
       tests_directory, = integration_tests(sdkhome)

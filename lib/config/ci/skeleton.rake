@@ -24,33 +24,29 @@ namespace :ci do
 
     task before_script: ['ci:common:before_script']
 
-    task :script, [:mocked] => ['ci:common:script'] do |_, attr|
-      mocked = attr[:mocked] || false
+    task script: ['ci:common:script'] do |_, attr|
       this_provides = [
         'skeleton'
       ]
-      Rake::Task['ci:common:run_tests'].invoke(this_provides, mocked)
+      Rake::Task['ci:common:run_tests'].invoke(this_provides)
     end
 
     task before_cache: ['ci:common:before_cache']
 
     task cleanup: ['ci:common:cleanup']
     # sample cleanup task
-    # task cleanup: ['ci:common:cleanup'] do 
+    # task cleanup: ['ci:common:cleanup'] do
     #   sh %(docker stop skeleton)
     #   sh %(docker rm skeleton)
     # end
 
-    task :execute, :mocked do |_, attr|
-      mocked = attr[:mocked] || false
+    task :execute do
       exception = nil
       begin
-        if not mocked
-          %w(before_install install before_script).each do |u|
-            Rake::Task["#{flavor.scope.path}:#{u}"].invoke
-          end
+        %w(before_install install before_script).each do |u|
+          Rake::Task["#{flavor.scope.path}:#{u}"].invoke
         end
-        Rake::Task["#{flavor.scope.path}:script"].invoke(mocked)
+        Rake::Task["#{flavor.scope.path}:script"].invoke
         Rake::Task["#{flavor.scope.path}:before_cache"].invoke
       rescue => e
         exception = e
