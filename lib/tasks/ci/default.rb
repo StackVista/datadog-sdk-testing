@@ -23,7 +23,7 @@ namespace :ci do
 
     task before_script: ['ci:common:before_script']
 
-    task lint: ['ci:common:before_script', 'ci:common:install', 'rubocop'] do
+    task lint: ['ci:common:before_script', 'ci:common:before_install', 'ci:common:install', 'rubocop'] do
       check_env
       sh %(flake8 #{ENV['SDK_HOME']})
       sh %(find #{ENV['SDK_HOME']} -name '*.py' -not\
