@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.2.6/ 2016.08.08
+==================
+
+### Changes
+
+* [improvement] Removing separate mock test facilities, all tests will be run together.
+
 0.2.5/ 2016.08.03
 ==================
 
