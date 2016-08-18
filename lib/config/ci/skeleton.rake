@@ -1,7 +1,7 @@
 require 'ci/common'
 
 def skeleton_version
-  ENV['FLAVOR_VERSION'] || '2.4.12'
+  ENV['FLAVOR_VERSION'] || 'latest'
 end
 
 def skeleton_rootdir
@@ -18,13 +18,13 @@ namespace :ci do
                            "--cache-dir #{ENV['PIP_CACHE']}",
                            "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
       # sample docker usage
-      # sh %(docker create -p XXX:YYY --name skeleton source/skeleton)
+      # sh %(docker create -p XXX:YYY --name skeleton source/skeleton:#{skeleton_version})
       # sh %(docker start skeleton)
     end
 
     task before_script: ['ci:common:before_script']
 
-    task script: ['ci:common:script'] do |_, attr|
+    task script: ['ci:common:script'] do
       this_provides = [
         'skeleton'
       ]

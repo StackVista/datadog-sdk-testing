@@ -38,16 +38,15 @@ end
 desc 'Clean development environment for the SDK (remove!)'
 task 'clean_env' do
   check_env
-  input = ''
-  print "Are you sure you want to delete the SDK environment (y/n)? "
+  print 'Are you sure you want to delete the SDK environment (y/n)? '
   input = STDIN.gets.chomp
   case input.upcase
-  when "Y"
+  when 'Y'
     `rm -rf #{ENV['SDK_HOME']}/venv` if File.directory?("#{ENV['SDK_HOME']}/venv")
     `rm -rf #{ENV['SDK_HOME']}/embedded` if File.directory?("#{ENV['SDK_HOME']}/embedded")
-    puts "virtual environment, agent source removed."
-  when "N"
-    puts "aborting the task..."
+    puts 'virtual environment, agent source removed.'
+  when 'N'
+    puts 'aborting the task...'
   end
 end
 
@@ -92,6 +91,17 @@ namespace :generate do
   task :skeleton, :option do |_, args|
     check_env
     create_skeleton(args[:option])
+  end
+
+  desc 'Add a new integration flavor to Travis - option may be option or option,version'
+  task :travis_flavor, [:option] do |_, args|
+    check_env
+
+    integration = args[:option]
+    flavor = 'latest'
+    flavor = args.extras[0] if args.extras.count == 1
+    puts "Adding integration flavor to travis: #{integration}:#{flavor}"
+    add_travis_flavor(integration, flavor)
   end
 end
 
