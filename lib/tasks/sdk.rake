@@ -101,7 +101,11 @@ namespace :generate do
     flavor = 'latest'
     flavor = args.extras[0] if args.extras.count == 1
     puts "Adding integration flavor to travis: #{integration}:#{flavor}"
-    add_travis_flavor(integration, flavor)
+    if check_travis_flavor(integration, flavor)
+      add_travis_flavor(integration, flavor)
+    else
+      puts "#{integration}:#{flavor} already set in travis... skipping."
+    end
   end
 end
 

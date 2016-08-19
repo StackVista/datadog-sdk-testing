@@ -82,12 +82,24 @@ def move_file(src, dst)
   File.rename(src, dst)
 end
 
+def check_travis_flavor(flavor, version = nil)
+  version = 'latest' if version.nil?
+  File.foreach("#{ENV['SDK_HOME']}/.travis.yml") do |line|
+    return false if line =~ /- TRAVIS_FLAVOR=#{flavor} FLAVOR_VERSION=#{version}/
+  end
+  true
+end
+
 def add_travis_flavor(flavor, version = nil)
   new_file = "#{ENV['SDK_HOME']}/.travis.yml.new"
   version = 'latest' if version.nil?
+  added = false
   File.open(new_file, 'w') do |fo|
     File.foreach("#{ENV['SDK_HOME']}/.travis.yml") do |line|
-      fo.puts "    - TRAVIS_FLAVOR=#{flavor} FLAVOR_VERSION=#{version}" if line =~ /# END OF TRAVIS MATRIX/
+      if !added && line =~ /# END OF TRAVIS MATRIX|- TRAVIS_FLAVOR=#{flavor}/
+        fo.puts "    - TRAVIS_FLAVOR=#{flavor} FLAVOR_VERSION=#{version}"
+        added = true
+      end
       fo.puts line
     end
   end
