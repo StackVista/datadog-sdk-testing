@@ -18,7 +18,7 @@ namespace :ci do
                            "--cache-dir #{ENV['PIP_CACHE']}",
                            "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
       # sample docker usage
-      # sh %(docker create -p XXX:YYY --name skeleton source/skeleton:#{skeleton_version})
+      # sh %(docker create -p XXX:YYY --name skeleton source/skeleton:skeleton_version)
       # sh %(docker start skeleton)
     end
 
