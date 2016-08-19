@@ -20,8 +20,7 @@ Gem::Specification.new do |s|
                      'lib/config/requirements.txt',
                      'lib/config/test_skeleton.py',
                      'README.md',
-                     'LICENSE'
-  ]
+                     'LICENSE']
   s.homepage      = 'http://rubygems.org/gems/datadog-sdk-testing'
   s.license       = 'MIT'
 end

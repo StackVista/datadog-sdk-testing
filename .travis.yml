@@ -1,0 +1,12 @@
+sudo: required
+
+language: ruby
+rvm:
+  - 2.0
+  - 2.2
+
+install:
+  - gem install rubocop
+
+script:
+  - rubocop -c ./.rubocop.yml .
