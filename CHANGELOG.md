@@ -1,5 +1,17 @@
 # CHANGELOG
 
+0.3.0/ 2016.08.22
+==================
+
+### Changes
+
+* [improvement] New Task to allow adding new flavor to existing integration.
+* [improvement] Enable Matrix (flavored) testing on TravisCI.
+
+* [bugfix] big refactor to be rubocop compliant.
+
+* [ci] enabled rubocop linting.
+
 0.2.6/ 2016.08.08
 ==================
 
