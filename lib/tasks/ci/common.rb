@@ -7,7 +7,6 @@ require 'timeout'
 # Colors don't work on Appveyor
 String.disable_colorization = true if Gem.win_platform?
 
-
 def check_env
   abort 'SDK_HOME env variable must be defined in your Rakefile to used this gem.' unless ENV['SDK_HOME']
 end
@@ -36,17 +35,21 @@ def in_venv
   ENV['RUN_VENV'] && ENV['RUN_VENV'] == 'true' ? true : false
 end
 
-def install_requirements(req_file, pip_options = nil, output = nil, use_venv = nil)
+def install_req(requirement, pip_options = nil, output = nil, use_venv = nil)
   pip_command = use_venv ? "#{ENV['SDK_HOME']}/venv/bin/pip" : 'pip'
   redirect_output = output ? "2>&1 >> #{output}" : ''
   pip_options = '' if pip_options.nil?
+  unless requirement.empty? || requirement.start_with?('#')
+    sh %(#{pip_command} install #{requirement} #{pip_options} #{redirect_output}\
+         || echo 'Unable to install #{requirement}' #{redirect_output})
+  end
+end
+
+def install_requirements(req_file, pip_options = nil, output = nil, use_venv = nil)
   File.exist?(req_file) && File.open(req_file, 'r') do |f|
     f.each_line do |line|
       line.strip!
-      unless line.empty? || line.start_with?('#')
-        sh %(#{pip_command} install #{line} #{pip_options} #{redirect_output}\
-             || echo 'Unable to install #{line}' #{redirect_output})
-      end
+      install_req(line, pip_options, output, use_venv)
     end
   end
 end
@@ -74,6 +77,75 @@ def integration_tests(root_dir)
   [testable, untested]
 end
 
+def move_file(src, dst)
+  File.delete(dst)
+  File.rename(src, dst)
+end
+
+def check_travis_flavor(flavor, version = nil)
+  version = 'latest' if version.nil?
+  File.foreach("#{ENV['SDK_HOME']}/.travis.yml") do |line|
+    return false if line =~ /- TRAVIS_FLAVOR=#{flavor} FLAVOR_VERSION=#{version}/
+  end
+  true
+end
+
+def add_travis_flavor(flavor, version = nil)
+  new_file = "#{ENV['SDK_HOME']}/.travis.yml.new"
+  version = 'latest' if version.nil?
+  added = false
+  File.open(new_file, 'w') do |fo|
+    File.foreach("#{ENV['SDK_HOME']}/.travis.yml") do |line|
+      if !added && line =~ /# END OF TRAVIS MATRIX|- TRAVIS_FLAVOR=#{flavor}/
+        fo.puts "    - TRAVIS_FLAVOR=#{flavor} FLAVOR_VERSION=#{version}"
+        added = true
+      end
+      fo.puts line
+    end
+  end
+  move_file(new_file, "#{ENV['SDK_HOME']}/.travis.yml")
+end
+
+def add_circleci_flavor(flavor)
+  new_file = "#{ENV['SDK_HOME']}/circle.yml.new"
+  File.open(new_file, 'w') do |fo|
+    File.foreach("#{ENV['SDK_HOME']}/circle.yml") do |line|
+      fo.puts "        - rake ci:run[#{flavor}]" if line =~ /bundle\ exec\ rake\ requirements/
+      fo.puts line
+    end
+  end
+  move_file(new_file, "#{ENV['SDK_HOME']}/circle.yml")
+end
+
+def copy_skeleton(source, dst, integration)
+  gem_home = Bundler.rubygems.find_name('datadog-sdk-testing').first.full_gem_path
+  sh "cp #{gem_home}/#{source} #{ENV['SDK_HOME']}/#{integration}/#{dst}"
+end
+
+def create_integration_path(integration)
+  sh "mkdir -p #{ENV['SDK_HOME']}/#{integration}/ci"
+end
+
+def rename_skeleton(integration)
+  capitalized = integration.capitalize
+  Dir.glob("#{ENV['SDK_HOME']}/#{integration}/**/*") do |f|
+    if File.file?(f)
+      sed(f, 'skeleton', integration.to_s, 'g')
+      sed(f, 'Skeleton', capitalized.to_s, 'g')
+    end
+  end
+end
+
+def generate_skeleton(integration)
+  copy_skeleton('lib/config/ci/skeleton.rake', "ci/#{integration}.rake", integration)
+  copy_skeleton('lib/config/manifest.json', 'manifest,json', integration)
+  copy_skeleton('lib/config/check.py', 'check.py', integration)
+  copy_skeleton('lib/config/test_skeleton.py', "test_#{integration}.py", integration)
+  copy_skeleton('lib/config/metadata.csv', 'metadata.csv', integration)
+  copy_skeleton('lib/config/requirements.txt', 'requirements.txt', integration)
+  copy_skeleton('lib/config/README.md', 'README.md', integration)
+end
+
 def create_skeleton(integration)
   if File.directory?("#{ENV['SDK_HOME']}/#{integration}")
     puts "directory already exists for #{integration} - bailing out."
@@ -81,43 +153,14 @@ def create_skeleton(integration)
   end
 
   puts "generating skeleton files for #{integration}"
-  gem_home = Bundler.rubygems.find_name('datadog-sdk-testing').first.full_gem_path
-  capitalized = integration.capitalize
-  sh "mkdir -p #{ENV['SDK_HOME']}/#{integration}/ci"
-  sh "cp #{gem_home}/lib/config/ci/skeleton.rake #{ENV['SDK_HOME']}/#{integration}/ci/#{integration}.rake"
-  sh "cp #{gem_home}/lib/config/manifest.json #{ENV['SDK_HOME']}/#{integration}/manifest.json"
-  sh "cp #{gem_home}/lib/config/check.py #{ENV['SDK_HOME']}/#{integration}/check.py"
-  sh "cp #{gem_home}/lib/config/test_skeleton.py #{ENV['SDK_HOME']}/#{integration}/test_#{integration}.py"
-  sh "cp #{gem_home}/lib/config/metadata.csv #{ENV['SDK_HOME']}/#{integration}/metadata.csv"
-  sh "cp #{gem_home}/lib/config/requirements.txt #{ENV['SDK_HOME']}/#{integration}/requirements.txt"
-  sh "cp #{gem_home}/lib/config/README.md #{ENV['SDK_HOME']}/#{integration}/README.md"
-  Dir.glob("#{ENV['SDK_HOME']}/#{integration}/**/*") do |f|
-    if File.file?(f)
-      sed(f, 'skeleton', "#{integration}", 'g')
-      sed(f, 'Skeleton', "#{capitalized}", 'g')
-    end
-  end
+  create_integration_path(integration.to_s)
+  generate_skeleton(integration.to_s)
+  rename_skeleton(integration.to_s)
+
   sh "git add #{ENV['SDK_HOME']}/#{integration}/"
 
-  new_file = "#{ENV['SDK_HOME']}/circle.yml.new"
-  File.open(new_file, 'w') do |fo|
-    File.foreach("#{ENV['SDK_HOME']}/circle.yml") do |line|
-      fo.puts "        - rake ci:run[#{integration}]" if line =~ /bundle\ exec\ rake\ requirements/
-      fo.puts line
-    end
-  end
-  File.delete("#{ENV['SDK_HOME']}/circle.yml")
-  File.rename(new_file, "#{ENV['SDK_HOME']}/circle.yml")
-
-  new_file = "#{ENV['SDK_HOME']}/.travis.yml.new"
-  File.open(new_file, 'w') do |fo|
-    File.foreach("#{ENV['SDK_HOME']}/.travis.yml") do |line|
-      fo.puts "  - rake ci:run[#{integration}]" if line =~ /bundle\ exec\ rake\ requirements/
-      fo.puts line
-    end
-  end
-  File.delete("#{ENV['SDK_HOME']}/.travis.yml")
-  File.rename(new_file, "#{ENV['SDK_HOME']}/.travis.yml")
+  add_travis_flavor(integration)
+  add_circleci_flavor(integration)
 end
 
 # helper class to wait for TCP/HTTP services to boot
