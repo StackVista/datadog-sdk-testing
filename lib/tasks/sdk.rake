@@ -29,7 +29,7 @@ task 'setup_env' do
   `venv/bin/pip install -r #{ENV['SDK_HOME']}/requirements-test.txt` if File.exist?('requirements-test.txt')
   # These deps are not really needed, so we ignore failures
   ENV['PIP_COMMAND'] = "#{ENV['SDK_HOME']}/venv/bin/pip"
-  `git clone https://github.com/DataDog/dd-agent.git #{ENV['SDK_HOME']}/embedded/dd-agent`
+  `git clone --depth 1 https://github.com/DataDog/dd-agent.git #{ENV['SDK_HOME']}/embedded/dd-agent`
   # install agent core dependencies
   `#{ENV['SDK_HOME']}/venv/bin/pip install -r #{ENV['SDK_HOME']}/embedded/dd-agent/requirements.txt`
   `echo "#{ENV['SDK_HOME']}/embedded/dd-agent/" > #{ENV['SDK_HOME']}/venv/lib/python2.7/site-packages/datadog-agent.pth`
@@ -60,7 +60,7 @@ end
 desc 'Pull latest agent code'
 task 'pull_latest_agent' do
   check_env
-  `cd #{ENV['SDK_HOME']}/embedded/dd-agent && git fetch -p && git pull && cd -`
+  `cd #{ENV['SDK_HOME']}/embedded/dd-agent && git fetch -p && git pull --depth 1 && cd -`
 end
 
 namespace :test do
