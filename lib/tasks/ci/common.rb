@@ -138,7 +138,7 @@ end
 
 def generate_skeleton(integration)
   copy_skeleton('lib/config/ci/skeleton.rake', "ci/#{integration}.rake", integration)
-  copy_skeleton('lib/config/manifest.json', 'manifest,json', integration)
+  copy_skeleton('lib/config/manifest.json', 'manifest.json', integration)
   copy_skeleton('lib/config/check.py', 'check.py', integration)
   copy_skeleton('lib/config/test_skeleton.py', "test_#{integration}.py", integration)
   copy_skeleton('lib/config/metadata.csv', 'metadata.csv', integration)
