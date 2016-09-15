@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.3.1/ 2016.09.15
+==================
+
+### Changes
+
+* [bugfix] sample config YAML should be copied to integration skeleton.
+
 0.3.0/ 2016.08.22
 ==================
 
