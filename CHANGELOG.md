@@ -5,6 +5,7 @@
 
 ### Changes
 
+* [bugfix] `manifest.json` was getting copied with bad name - comma should be dot.
 * [bugfix] sample config YAML should be copied to integration skeleton.
 
 0.3.0/ 2016.08.22
