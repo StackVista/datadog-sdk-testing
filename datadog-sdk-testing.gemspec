@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
                      'lib/config/ci/skeleton.rake',
                      'lib/config/conf.yaml.example',
                      'lib/config/manifest.json',
+                     'lib/config/datadog.conf',
                      'lib/config/metadata.csv',
                      'lib/config/README.md',
                      'lib/config/requirements.txt',
