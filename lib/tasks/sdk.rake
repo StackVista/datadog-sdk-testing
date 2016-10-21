@@ -33,6 +33,7 @@ task 'setup_env' do
   # install agent core dependencies
   `#{ENV['SDK_HOME']}/venv/bin/pip install -r #{ENV['SDK_HOME']}/embedded/dd-agent/requirements.txt`
   `echo "#{ENV['SDK_HOME']}/embedded/dd-agent/" > #{ENV['SDK_HOME']}/venv/lib/python2.7/site-packages/datadog-agent.pth`
+  `cp #{gem_home}/lib/config/datadog.conf #{ENV['SDK_HOME']}/embedded/dd-agent/datadog.conf`
 end
 
 desc 'Clean development environment for the SDK (remove!)'
