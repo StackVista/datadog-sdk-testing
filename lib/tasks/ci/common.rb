@@ -39,7 +39,7 @@ def install_req(requirement, pip_options = nil, output = nil, use_venv = nil)
   pip_command = use_venv ? "#{ENV['SDK_HOME']}/venv/bin/pip" : 'pip'
   redirect_output = output ? "2>&1 >> #{output}" : ''
   pip_options = '' if pip_options.nil?
-  return if requirement.empty? || requirement.start_with?('#')
+  return true if requirement.empty? || requirement.start_with?('#')
   sh %(#{pip_command} install #{requirement} #{pip_options} #{redirect_output}\
        || echo 'Unable to install #{requirement}' #{redirect_output})
 end
