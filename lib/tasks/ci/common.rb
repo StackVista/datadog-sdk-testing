@@ -39,10 +39,9 @@ def install_req(requirement, pip_options = nil, output = nil, use_venv = nil)
   pip_command = use_venv ? "#{ENV['SDK_HOME']}/venv/bin/pip" : 'pip'
   redirect_output = output ? "2>&1 >> #{output}" : ''
   pip_options = '' if pip_options.nil?
-  unless requirement.empty? || requirement.start_with?('#')
-    sh %(#{pip_command} install #{requirement} #{pip_options} #{redirect_output}\
-         || echo 'Unable to install #{requirement}' #{redirect_output})
-  end
+  return true if requirement.empty? || requirement.start_with?('#')
+  sh %(#{pip_command} install #{requirement} #{pip_options} #{redirect_output}\
+       || echo 'Unable to install #{requirement}' #{redirect_output})
 end
 
 def install_requirements(req_file, pip_options = nil, output = nil, use_venv = nil)
@@ -174,7 +173,7 @@ class Wait
         s = TCPSocket.new('localhost', port)
         s.close
         return true
-      rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+      rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH, EOFError
         return false
       end
     end
@@ -187,7 +186,7 @@ class Wait
       begin
         r = HTTParty.get(url)
         return (200...300).cover? r.code
-      rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+      rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH, EOFError
         return false
       end
     end
