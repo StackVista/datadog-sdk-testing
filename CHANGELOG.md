@@ -1,5 +1,16 @@
 # CHANGELOG
 
+0.3.2/ 2016.11.13
+==================
+
+### Changes
+
+* [bugfix] adds datadog.conf file to agent directory.
+* [bugfix] EOFile will no longer be a fatal error for wait.
+* [bugfix] Fixing broken guard statements.
+
+* [ci] Rubocop max block length is now 90, instead of 25.
+
 0.3.1/ 2016.09.15
 ==================
 
