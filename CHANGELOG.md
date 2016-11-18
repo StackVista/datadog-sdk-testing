@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.3.3/ 2016.11.18
+==================
+
+### Changes
+
+* [bugfix] fixes bug in SDK setup_env task.
+
 0.3.2/ 2016.11.14
 ==================
 
