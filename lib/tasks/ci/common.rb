@@ -163,6 +163,12 @@ def create_skeleton(integration)
   add_circleci_flavor(integration)
 end
 
+def run_shell_script(shell_script)
+  gem_home = Bundler.rubygems.find_name('datadog-sdk-testing').first.full_gem_path
+  bash_utils = "#{gem_home}/lib/utils/bash_utils.sh"
+  sh %(bash -c "source #{bash_utils} && #{shell_script}")
+end
+
 # helper class to wait for TCP/HTTP services to boot
 class Wait
   DEFAULT_TIMEOUT = 10
