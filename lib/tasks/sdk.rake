@@ -59,6 +59,14 @@ task 'setup_hooks' do
   sh "ln -sf #{gem_home}/lib/tasks/ci/hooks/pre-commit.py #{ENV['SDK_HOME']}/.git/hooks/pre-commit"
 end
 
+desc 'Prepare Travis/Circle CI'
+task 'prep_travis_ci' do
+  check_env
+  travis_circle_env
+  gem_home = Bundler.rubygems.find_name('datadog-sdk-testing').first.full_gem_path
+  sh "ln -sf #{gem_home}/lib/config/datadog.conf ~/dd-agent/datadog.conf"
+end
+
 desc 'Pull latest agent code'
 task 'pull_latest_agent' do
   check_env

@@ -11,6 +11,10 @@ def check_env
   abort 'SDK_HOME env variable must be defined in your Rakefile to used this gem.' unless ENV['SDK_HOME']
 end
 
+def travis_circle_env
+  abort 'You are not in a Travis/Circle CI environment, this task wont apply.' if !ENV['TRAVIS_BUILD_DIR'] && !ENV['CIRCLE_PROJECT_REPONAME']
+end
+
 def sed(source, a, b, mods)
   if RUBY_PLATFORM.include? 'darwin'
     sh "sed -i '' \"s/#{a}/#{b}/#{mods}\" #{source}"
