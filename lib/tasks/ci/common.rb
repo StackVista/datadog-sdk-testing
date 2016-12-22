@@ -12,7 +12,7 @@ def check_env
 end
 
 def travis_circle_env
-  abort 'You are not in a Travis/Circle CI environment, this task wont apply.' if !ENV['TRAVIS_BUILD_DIR'] && !ENV['CIRCLE_PROJECT_REPONAME']
+  abort 'You are not in a Travis/Circle CI environment, this task wont apply.' if !ENV['TRAVIS'] && !ENV['CIRCLECI']
 end
 
 def sed(source, a, b, mods)
