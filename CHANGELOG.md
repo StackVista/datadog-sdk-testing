@@ -1,5 +1,19 @@
 # CHANGELOG
 
+0.3.5/ 2016.12.22
+==================
+
+### changes
+
+* [bugfix] use better env vars to detect ci environment.
+
+0.3.4/ 2016.12.22
+==================
+
+### Changes
+
+* [improvement] adds a small task to prepare Travis/Circle CI environments.
+
 0.3.3/ 2016.11.18
 ==================
 
