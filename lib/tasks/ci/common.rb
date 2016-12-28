@@ -15,11 +15,13 @@ def travis_circle_env
   abort 'You are not in a Travis/Circle CI environment, this task wont apply.' if !ENV['TRAVIS'] && !ENV['CIRCLECI']
 end
 
-def sed(source, a, b, mods)
+def sed(source, op, a, b, mods)
+  cmd = "#{op}/#{a}"
+  cmd = "#{cmd}/#{b}" unless b.nil? || b.empty?
   if RUBY_PLATFORM.include? 'darwin'
-    sh "sed -i '' \"s/#{a}/#{b}/#{mods}\" #{source}"
+    sh "sed -i '' \"#{cmd}/#{mods}\" #{source}"
   else
-    sh "sed -i \"s/#{a}/#{b}/#{mods}\" #{source}"
+    sh "sed -i \"#{cmd}/#{mods}\" #{source}"
   end
 end
 
@@ -152,8 +154,8 @@ def rename_skeleton(integration)
   capitalized = integration.capitalize
   Dir.glob("#{ENV['SDK_HOME']}/#{integration}/**/*") do |f|
     if File.file?(f)
-      sed(f, 'skeleton', integration.to_s, 'g')
-      sed(f, 'Skeleton', capitalized.to_s, 'g')
+      sed(f, 's', 'skeleton', integration.to_s, 'g')
+      sed(f, 's', 'Skeleton', capitalized.to_s, 'g')
     end
   end
 end
