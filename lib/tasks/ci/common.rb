@@ -28,6 +28,25 @@ def sleep_for(secs)
   sleep(secs)
 end
 
+def wait_on_docker_logs(c_name, max_wait, *include_array)
+  count = 0
+  logs = `docker logs #{c_name} 2>&1`
+  puts "Waiting for #{c_name} to come up"
+
+  until count == max_wait || include_array.any? { |phrase| logs.include?(phrase) }
+    sleep(1)
+    logs = `docker logs #{c_name} 2>&1`
+    count += 1
+  end
+
+  if include_array.any? { |phrase| logs.include?(phrase) }
+    puts "#{c_name} is up!"
+  else
+    sh %(docker logs #{c_name} 2>&1)
+    raise
+  end
+end
+
 def section(name)
   timestamp = Time.now.utc.iso8601
   puts ''
