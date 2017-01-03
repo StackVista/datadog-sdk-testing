@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.4.1/ Unreleased
+==================
+
+### Changes
+
+* [bugfix] adding forgotten SKIP_LINT env var support. See [#2][].
+
 0.4.0/ 2016.12.29
 ==================
 
