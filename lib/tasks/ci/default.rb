@@ -24,11 +24,15 @@ namespace :ci do
     task before_script: ['ci:common:before_script']
 
     task lint: ['ci:common:before_script', 'ci:common:before_install', 'ci:common:install', 'rubocop'] do
-      check_env
-      sh %(flake8 #{ENV['SDK_HOME']})
-      sh %(find #{ENV['SDK_HOME']} -name '*.py' -not\
-             \\( -path '*.cache*' -or -path '*embedded*' -or -path '*venv*' -or -path '*.git*' \\)\
-             | xargs -n 1 pylint --rcfile=#{ENV['SDK_HOME']}/.pylintrc)
+      if ENV['SKIP_LINT']
+        puts 'Skipping lint'.yellow
+      else
+        check_env
+        sh %(flake8 #{ENV['SDK_HOME']})
+        sh %(find #{ENV['SDK_HOME']} -name '*.py' -not\
+               \\( -path '*.cache*' -or -path '*embedded*' -or -path '*venv*' -or -path '*.git*' \\)\
+               | xargs -n 1 pylint --rcfile=#{ENV['SDK_HOME']}/.pylintrc)
+      end
     end
 
     task :requirements do
