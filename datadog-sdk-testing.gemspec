@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name          = 'datadog-sdk-testing'
-  s.version       = '0.4.1'
-  s.date          = '2017-01-03'
+  s.version       = '0.4.2'
+  s.date          = '2017-01-04'
   s.summary       = 'Datadog Integration SDK testing/scaffolding facilities.'
   s.description   = 'Datadog Integration SDK testing/scaffolding gem'
   s.authors       = ['Jaime Fullaondo']

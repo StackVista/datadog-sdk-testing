@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.4.2/ 2017.01.04
+==================
+
+### Changes
+
+* [bugfix] Fix broken test filtering logic. See [#31][].
+
 0.4.1/ 2017.01.03
 ==================
 
@@ -133,3 +140,4 @@
 [#2]: https://github.com/DataDog/datadog-sdk-testing/issues/2
 [#29]: https://github.com/DataDog/datadog-sdk-testing/issues/29
 [#30]: https://github.com/DataDog/datadog-sdk-testing/issues/30
+[#31]: https://github.com/DataDog/datadog-sdk-testing/issues/31
