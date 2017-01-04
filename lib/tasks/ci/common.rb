@@ -323,9 +323,10 @@ namespace :ci do
              end
 
       tests_directory, = integration_tests(sdkhome)
+      flavors_group = flavors.join('|')
       unless flavors.include?('default')
         tests_directory = tests_directory.reject do |test|
-          /.*#{flavors}.*$/.match(test).nil?
+          /.*(#{flavors_group}).*$/.match(test).nil?
         end
       end
       # Rake on Windows doesn't support setting the var at the beginning of the
