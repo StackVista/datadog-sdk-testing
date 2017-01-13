@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.4.3/ 2017.01.13
+==================
+
+### Changes
+
+* [bugfix] Improve linting speeds. See [#34][].
+
 0.4.2/ 2017.01.04
 ==================
 
@@ -141,3 +148,4 @@
 [#29]: https://github.com/DataDog/datadog-sdk-testing/issues/29
 [#30]: https://github.com/DataDog/datadog-sdk-testing/issues/30
 [#31]: https://github.com/DataDog/datadog-sdk-testing/issues/31
+[#34]: https://github.com/DataDog/datadog-sdk-testing/issues/34
