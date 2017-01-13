@@ -30,8 +30,8 @@ namespace :ci do
         check_env
         sh %(flake8 #{ENV['SDK_HOME']})
         sh %(find #{ENV['SDK_HOME']} -name '*.py' -not\
-               \\( -path '*.cache*' -or -path '*embedded*' -or -path '*venv*' -or -path '*.git*' \\)\
-               | xargs -n 1 pylint --rcfile=#{ENV['SDK_HOME']}/.pylintrc)
+               \\( -path '*.cache*' -or -path '*embedded*' -or -path '*dd-agent*' -or -path '*venv*' -or -path '*.git*' \\)\
+               | xargs -n 80 -P 8 pylint --rcfile=#{ENV['SDK_HOME']}/.pylintrc)
       end
     end
 
