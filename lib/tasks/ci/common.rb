@@ -343,7 +343,5 @@ namespace :ci do
       end
       t.reenable
     end
-
-    task execute: [:before_install, :install, :before_script, :script]
   end
 end
