@@ -1,5 +1,5 @@
 # datadog-sdk-testing
-Gem repo providing Integration SDK testing/scaffolding facilities (unpublished).
+Gem repo providing Integration SDK testing/scaffolding facilities.
 
 ## usage
 This gem essentially just provides a set of rake tasks to help you get up and running with integration testing and scaffolding. We expect to use this gem in `integrations-core` and `integrations-extras`.
