@@ -19,7 +19,7 @@ task 'setup_env' do
   check_env
   `mkdir -p #{ENV['SDK_HOME']}/venv`
   `wget -q -O #{ENV['SDK_HOME']}/venv/virtualenv.py https://raw.github.com/pypa/virtualenv/1.11.6/virtualenv.py`
-  `python #{ENV['SDK_HOME']}/venv/virtualenv.py  --no-site-packages --no-pip --no-setuptools #{ENV['SDK_HOME']}/venv/`
+  `python #{ENV['SDK_HOME']}/venv/virtualenv.py -p python2 --no-site-packages --no-pip --no-setuptools #{ENV['SDK_HOME']}/venv/`
   `wget -q -O #{ENV['SDK_HOME']}/venv/ez_setup.py https://bootstrap.pypa.io/ez_setup.py`
   `#{ENV['SDK_HOME']}/venv/bin/python #{ENV['SDK_HOME']}/venv/ez_setup.py`
   `wget -q -O #{ENV['SDK_HOME']}/venv/get-pip.py https://bootstrap.pypa.io/get-pip.py`
