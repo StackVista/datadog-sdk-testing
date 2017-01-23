@@ -1,6 +1,8 @@
 # datadog-sdk-testing
 Gem repo providing Integration SDK testing/scaffolding facilities.
 
+[![Gem Version](https://badge.fury.io/rb/datadog-sdk-testing.svg)](https://badge.fury.io/rb/datadog-sdk-testing)
+
 ## usage
 This gem essentially just provides a set of rake tasks to help you get up and running with integration testing and scaffolding. We expect to use this gem in `integrations-core` and `integrations-extras`.
 
