@@ -1,5 +1,14 @@
 # CHANGELOG
 
+0.4.4/ 2017.01.23
+==================
+
+### Changes
+
+* [bugfix] Remove auto execution of tasks in `common.rb`. See [#32][].
+* [bugfix] Use python2 to create the venv. See [#36][] (thanks [@lastmikoi][]).
+* [bugfix] Fix patterns of rubocoped files. See [#35][].
+
 0.4.3/ 2017.01.13
 ==================
 
@@ -148,4 +157,8 @@
 [#29]: https://github.com/DataDog/datadog-sdk-testing/issues/29
 [#30]: https://github.com/DataDog/datadog-sdk-testing/issues/30
 [#31]: https://github.com/DataDog/datadog-sdk-testing/issues/31
+[#32]: https://github.com/DataDog/datadog-sdk-testing/issues/32
 [#34]: https://github.com/DataDog/datadog-sdk-testing/issues/34
+[#35]: https://github.com/DataDog/datadog-sdk-testing/issues/35
+[#36]: https://github.com/DataDog/datadog-sdk-testing/issues/36
+[@lastmikoi]: https://github.com/lastmikoi
