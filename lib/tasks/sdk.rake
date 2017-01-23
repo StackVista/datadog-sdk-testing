@@ -107,7 +107,7 @@ namespace :test do
 end
 
 RuboCop::RakeTask.new(:rubocop) do |t|
-  t.patterns = ['ci/**/*.rb', 'Gemfile', 'Rakefile']
+  t.patterns = ['./*/ci/*.rake', 'Gemfile', 'Rakefile']
 end
 
 desc 'Lint the code through pylint'
