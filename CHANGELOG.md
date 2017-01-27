@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.4.5/ 2017.01.27
+==================
+
+### Changes
+
+* [bugfix] Updating manifest template to account for supported OSs. See [#37][].
+
 0.4.4/ 2017.01.23
 ==================
 
@@ -161,4 +168,5 @@
 [#34]: https://github.com/DataDog/datadog-sdk-testing/issues/34
 [#35]: https://github.com/DataDog/datadog-sdk-testing/issues/35
 [#36]: https://github.com/DataDog/datadog-sdk-testing/issues/36
+[#37]: https://github.com/DataDog/datadog-sdk-testing/issues/37
 [@lastmikoi]: https://github.com/lastmikoi
