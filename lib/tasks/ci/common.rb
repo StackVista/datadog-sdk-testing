@@ -3,6 +3,7 @@ require 'httparty'
 require 'socket'
 require 'time'
 require 'timeout'
+require 'securerandom'
 
 # Colors don't work on Appveyor
 String.disable_colorization = true if Gem.win_platform?
@@ -160,6 +161,13 @@ def rename_skeleton(integration)
   end
 end
 
+def replace_guid(integration)
+  guid = SecureRandom.uuid
+  f = File.open("#{ENV['SDK_HOME']}/#{integration}/manifest.json")
+  sed(f, 's', 'guid_replaceme', guid.to_s, 'g')
+  file.close
+end
+
 def generate_skeleton(integration)
   copy_skeleton('lib/config/ci/skeleton.rake', "ci/#{integration}.rake", integration)
   copy_skeleton('lib/config/manifest.json', 'manifest.json', integration)
@@ -181,6 +189,8 @@ def create_skeleton(integration)
   create_integration_path(integration.to_s)
   generate_skeleton(integration.to_s)
   rename_skeleton(integration.to_s)
+
+  replace_guid(integration.to_s)
 
   sh "git add #{ENV['SDK_HOME']}/#{integration}/"
 
