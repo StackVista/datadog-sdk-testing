@@ -1,5 +1,13 @@
 # CHANGELOG
 
+0.4.6/ 2017.01.30
+==================
+
+### Changes
+
+* [bugfix] Include GUID in manifest - necessary for windows. See [#38][].
+* [bugfix] CircleCI - gnore ruby vendor directory when linting. See [#39][].
+
 0.4.5/ 2017.01.27
 ==================
 
@@ -169,4 +177,6 @@
 [#35]: https://github.com/DataDog/datadog-sdk-testing/issues/35
 [#36]: https://github.com/DataDog/datadog-sdk-testing/issues/36
 [#37]: https://github.com/DataDog/datadog-sdk-testing/issues/37
+[#38]: https://github.com/DataDog/datadog-sdk-testing/issues/38
+[#39]: https://github.com/DataDog/datadog-sdk-testing/issues/39
 [@lastmikoi]: https://github.com/lastmikoi
