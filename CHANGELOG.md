@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.4.7/ 2017.01.30
+==================
+
+### Changes
+
+* [bugfix] fix regression + don't attempt to lint if nothing there. See [#40][].
+
 0.4.6/ 2017.01.30
 ==================
 
@@ -179,4 +186,5 @@
 [#37]: https://github.com/DataDog/datadog-sdk-testing/issues/37
 [#38]: https://github.com/DataDog/datadog-sdk-testing/issues/38
 [#39]: https://github.com/DataDog/datadog-sdk-testing/issues/39
+[#40]: https://github.com/DataDog/datadog-sdk-testing/issues/40
 [@lastmikoi]: https://github.com/lastmikoi
