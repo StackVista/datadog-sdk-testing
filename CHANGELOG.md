@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.4.9/ 2017.02.03
+==================
+
+### Changes
+
+* [bugfix] GUID replacement fails on sed. See [#42][] (Thanks [@ksauzz][]).
+
 0.4.8/ 2017.02.03
 ==================
 
@@ -195,4 +202,6 @@
 [#39]: https://github.com/DataDog/datadog-sdk-testing/issues/39
 [#40]: https://github.com/DataDog/datadog-sdk-testing/issues/40
 [#41]: https://github.com/DataDog/datadog-sdk-testing/issues/41
+[#42]: https://github.com/DataDog/datadog-sdk-testing/issues/42
+[@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi
