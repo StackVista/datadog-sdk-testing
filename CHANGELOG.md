@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.4.8/ 2017.02.03
+==================
+
+### Changes
+
+* [bugfix] fix OSX regression with xargs. See [#41][].
+
 0.4.7/ 2017.01.30
 ==================
 
@@ -187,4 +194,5 @@
 [#38]: https://github.com/DataDog/datadog-sdk-testing/issues/38
 [#39]: https://github.com/DataDog/datadog-sdk-testing/issues/39
 [#40]: https://github.com/DataDog/datadog-sdk-testing/issues/40
+[#41]: https://github.com/DataDog/datadog-sdk-testing/issues/41
 [@lastmikoi]: https://github.com/lastmikoi
