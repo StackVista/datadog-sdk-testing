@@ -163,9 +163,8 @@ end
 
 def replace_guid(integration)
   guid = SecureRandom.uuid
-  f = File.open("#{ENV['SDK_HOME']}/#{integration}/manifest.json")
+  f = "#{ENV['SDK_HOME']}/#{integration}/manifest.json"
   sed(f, 's', 'guid_replaceme', guid.to_s, 'g')
-  file.close
 end
 
 def generate_skeleton(integration)
