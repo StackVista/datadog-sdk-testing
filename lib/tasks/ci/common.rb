@@ -175,6 +175,7 @@ def generate_skeleton(integration)
   copy_skeleton('lib/config/metadata.csv', 'metadata.csv', integration)
   copy_skeleton('lib/config/requirements.txt', 'requirements.txt', integration)
   copy_skeleton('lib/config/README.md', 'README.md', integration)
+  copy_skeleton('lib/config/CHANGELOG.md', 'CHANGELOG.md', integration)
   copy_skeleton('lib/config/conf.yaml.example', 'conf.yaml.example', integration)
 end
 
