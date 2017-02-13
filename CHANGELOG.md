@@ -1,5 +1,14 @@
 # CHANGELOG
 
+0.5.0/ 2017.02.13
+==================
+
+### Changes
+
+* [feature] Skip CI for check if unchanged. See [#44][].
+* [feature] Revamp of requirements tool/hook. See [#45][].
+* [bugfix] Add changelog to integration skeleton. See [#46][].
+
 0.4.9/ 2017.02.03
 ==================
 
@@ -203,5 +212,8 @@
 [#40]: https://github.com/DataDog/datadog-sdk-testing/issues/40
 [#41]: https://github.com/DataDog/datadog-sdk-testing/issues/41
 [#42]: https://github.com/DataDog/datadog-sdk-testing/issues/42
+[#44]: https://github.com/DataDog/datadog-sdk-testing/issues/44
+[#45]: https://github.com/DataDog/datadog-sdk-testing/issues/45
+[#46]: https://github.com/DataDog/datadog-sdk-testing/issues/46
 [@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi
