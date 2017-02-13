@@ -30,3 +30,9 @@ ENV['SDK_HOME'] = File.dirname(__FILE__)
 spec = Gem::Specification.find_by_name 'datadog-sdk-testing'
 load "#{spec.gem_dir}/lib/tasks/sdk.rake"
 ```
+
+if you wish to enable the remote facilities for the requirement conflict checking [tool](https://github.com/DataDog/datadog-sdk-testing/blob/master/lib/tasks/ci/hooks/pre-commit.py) you will have to install [github3.py](https://github.com/sigmavirus24/github3.p://github.com/sigmavirus24/github3.py) (pre-release):
+```
+pip install --pre github3.py
+```
+By default this tool is designed to be used as a pre-commit hook and runs only on local repos. Due to the duration of the validation runs it's not recommended to enable remote repos when using as a pre-commit hook. We perform requirement validation in our continuous integration environment, so it's definitely not mandatory.
