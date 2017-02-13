@@ -147,8 +147,15 @@ namespace :ci do
     check_env
     puts 'Assuming you are running these tests locally' unless ENV['TRAVIS']
     flavor = args[:flavor] || ENV['TRAVIS_FLAVOR'] || 'default'
+    can_skip, checks = can_skip?
+    can_skip &&= !%w(default).include?(flavor)
+
     flavors = flavor.split(',')
     flavors.each do |f|
+      if can_skip && !checks.include?(flavor)
+        puts "skipping #{flavor} tests, not affected by the change".yellow
+        next
+      end
       Rake::Task["ci:#{f}:execute"].invoke
     end
   end
