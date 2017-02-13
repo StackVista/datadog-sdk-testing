@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name          = 'datadog-sdk-testing'
-  s.version       = '0.4.9'
-  s.date          = '2017-02-03'
+  s.version       = '0.5.0'
+  s.date          = '2017-02-13'
   s.summary       = 'Datadog Integration SDK testing/scaffolding facilities.'
   s.description   = 'Datadog Integration SDK testing/scaffolding gem'
   s.authors       = ['Jaime Fullaondo']
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
                      'lib/config/datadog.conf',
                      'lib/config/metadata.csv',
                      'lib/config/README.md',
+                     'lib/config/CHANGELOG.md',
                      'lib/config/requirements.txt',
                      'lib/config/test_skeleton.py',
                      'README.md',
