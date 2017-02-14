@@ -31,12 +31,15 @@ def two_fa():
 
 class RequirementsAnalyzer(object):
     SPECIFIERS = ['==', '!=' '<=', '>=', '<', '>']
+    COMMENT = '#'
 
-    def __init__(self, remote, local, patterns=['requirements.txt'], verbose=False):
+    def __init__(self, remote, local, patterns=['requirements.txt'],
+                 ignorable=[], verbose=False):
         self.api = None
         self.remote_sources = remote
         self.local_sources = local
         self.req_patterns = patterns
+        self.req_ignore = ignorable
         self.verbose = verbose
 
         if github3:
@@ -69,28 +72,48 @@ class RequirementsAnalyzer(object):
                 files[content.name] = content
                 continue
 
-            req = gh_repo.file_contents("/{}/requirements.txt".format(entry))
-            reqs[entry] = req.decoded
+            req_file = "/{}/requirements.txt".format(entry)
+            if self.req_ignore:
+                for pattern in self.req_ignore:
+                    if not fnmatch.fnmatchcase(req_file, pattern):
+                        req = gh_repo.file_contents(req_file)
+                        reqs[entry] = req.decoded
+                        break
+            else:
+                req = gh_repo.file_contents(req_file)
+                reqs[entry] = req.decoded
 
         fmatches = []
         for pattern in self.req_patterns:
-            fmatches.extend(fnmatch.filter(files.keys(), pattern))
+            hits = fnmatch.filter(files.keys(), pattern)
+            fmatches.extend(hits)
 
+        fmatches = self.filter_matches(fmatches)  # filter/remove duplicates
         for match in fmatches:
             req = gh_repo.file_contents(files[match].path)
             reqs[match] = req.decoded
 
         return reqs
 
-    def get_local_files(self):
+    def get_local_files(self, src):
         matches = []
-        for src in self.local_sources:
+        for root, dirnames, filenames in os.walk(src):
             for pattern in self.req_patterns:
-                for root, dirnames, filenames in os.walk(src):
-                    for filename in fnmatch.filter(filenames, pattern):
-                        matches.append(os.path.join(root, filename))
+                hits = [os.path.join(root, hit) for hit in fnmatch.filter(filenames, pattern)]
+                hits = self.filter_matches(hits)
+                matches.extend(hits)
 
-        return matches
+        return list(set(matches))
+
+    def filter_matches(self, matches):
+        if not self.req_ignore:
+            return matches
+
+        excluded = []
+        for pattern in self.req_ignore:
+            excluded.extend(fnmatch.filter(matches, pattern))
+
+        return list(set(matches)-set(excluded))
 
     def get_local_contents(self, files):
         local_reqs = {}
@@ -116,7 +139,7 @@ class RequirementsAnalyzer(object):
             print 'No Github API set (missing creds?) cant crawl remotes.'
 
         for local in self.local_sources:
-            requirements = self.get_local_contents(self.get_local_files())
+            requirements = self.get_local_contents(self.get_local_files(local))
             reqs[local] = requirements
 
         return reqs
@@ -133,6 +156,14 @@ class RequirementsAnalyzer(object):
 
                 for line in mycontent:
                     line = "".join(line.split())
+                    comment_idx = line.find(self.COMMENT)
+                    if comment_idx >= 0:
+                        line = line[:comment_idx]
+
+                    if not any(sep in line for sep in self.SPECIFIERS):
+                        reqs[line] = ('unpinned', integration, source)
+                        continue
+
                     for specifier in self.SPECIFIERS:
                         idx = line.find(specifier)
                         if idx < 0:
@@ -143,11 +174,12 @@ class RequirementsAnalyzer(object):
 
                         if req in reqs and reqs[req][0] != specifier:
                             # version mismatch
-                            print "There's a version mismatch with {req} " \
-                                " {spec} and {prev_spec} defined in {src} " \
+                            print "There's a version mismatch with {req} {spec} " \
+                                "@ {offense} and {prev_spec} defined in {src} " \
                                 "@ {repo}.".format(
                                     req=req,
                                     spec=specifier,
+                                    offense=source,
                                     prev_spec=reqs[req][0],
                                     src=reqs[req][1],
                                     repo=reqs[req][2]
@@ -167,6 +199,14 @@ def str2bool(v):
 def main(args):
     remote = local = []
     verbose = str2bool(os.environ.get('VERBOSE', 'false'))
+    patterns = os.environ.get('REQ_PATTERNS', 'requirements*.txt')
+    if patterns:
+        patterns = patterns.split(',')
+
+    ignorable = os.environ.get('REQ_IGNORE_PATH', None)
+    if ignorable:
+        ignorable = ignorable.split(',')
+
     if not len(args):
         remote = [repo.strip() for repo in os.environ.get('REQ_REMOTES', '').split(',')]
         local = [repo.strip() for repo in os.environ.get('REQ_LOCALS', '').split(',')]
@@ -178,8 +218,10 @@ def main(args):
     else:
         local = ['.']
 
-    analyzer = RequirementsAnalyzer(
-        remote=remote, local=local, patterns=['requirements*.txt'], verbose=verbose)
+    analyzer = RequirementsAnalyzer(remote=remote, local=local,
+                                    patterns=patterns,
+                                    ignorable=ignorable,
+                                    verbose=verbose)
 
     err, reqs = analyzer.process_requirements(analyzer.get_all_requirements())
     if not err:
