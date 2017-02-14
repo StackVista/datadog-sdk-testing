@@ -1,5 +1,14 @@
 # CHANGELOG
 
+0.5.1/ 2017.02.14
+==================
+
+### Changes
+
+* [improvement] Better detect comments, and unpinned version. See [#47][].
+* [improvement] Add pattern definition via environment variable. See [#47][].
+* [bugfix] Fix bad reporting of mismatch locations. See [#47][].
+
 0.5.0/ 2017.02.13
 ==================
 
@@ -215,5 +224,6 @@
 [#44]: https://github.com/DataDog/datadog-sdk-testing/issues/44
 [#45]: https://github.com/DataDog/datadog-sdk-testing/issues/45
 [#46]: https://github.com/DataDog/datadog-sdk-testing/issues/46
+[#47]: https://github.com/DataDog/datadog-sdk-testing/issues/47
 [@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi
