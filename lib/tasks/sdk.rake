@@ -161,4 +161,4 @@ namespace :ci do
   end
 end
 
-task default: ['lint', 'ci:run']
+task default: ['lint', 'ci:run', 'requirements']
