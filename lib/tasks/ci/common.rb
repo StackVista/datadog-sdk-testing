@@ -19,11 +19,7 @@ end
 def sed(source, op, a, b, mods)
   cmd = "#{op}/#{a}"
   cmd = "#{cmd}/#{b}" unless b.nil? || b.empty?
-  if RUBY_PLATFORM.include? 'darwin'
-    sh "sed -i '' \"#{cmd}/#{mods}\" #{source}"
-  else
-    sh "sed -i \"#{cmd}/#{mods}\" #{source}"
-  end
+  sh "sed -i '' \"#{cmd}/#{mods}\" #{source} || sed -i \"#{cmd}/#{mods}\" #{source}"
 end
 
 def sleep_for(secs)
