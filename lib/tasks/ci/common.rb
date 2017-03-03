@@ -192,8 +192,6 @@ def create_skeleton(integration)
 
   replace_guid(integration.to_s)
 
-  sh "git add #{ENV['SDK_HOME']}/#{integration}/"
-
   add_travis_flavor(integration)
   add_circleci_flavor(integration)
 end
