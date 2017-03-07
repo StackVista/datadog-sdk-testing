@@ -19,11 +19,7 @@ end
 def sed(source, op, a, b, mods)
   cmd = "#{op}/#{a}"
   cmd = "#{cmd}/#{b}" unless b.nil? || b.empty?
-  if RUBY_PLATFORM.include? 'darwin'
-    sh "sed -i '' \"#{cmd}/#{mods}\" #{source}"
-  else
-    sh "sed -i \"#{cmd}/#{mods}\" #{source}"
-  end
+  sh "sed -i '' \"#{cmd}/#{mods}\" #{source} || sed -i \"#{cmd}/#{mods}\" #{source}"
 end
 
 def sleep_for(secs)
@@ -191,8 +187,6 @@ def create_skeleton(integration)
   rename_skeleton(integration.to_s)
 
   replace_guid(integration.to_s)
-
-  sh "git add #{ENV['SDK_HOME']}/#{integration}/"
 
   add_travis_flavor(integration)
   add_circleci_flavor(integration)

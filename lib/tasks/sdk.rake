@@ -70,7 +70,7 @@ task 'wipe', :option do |_, args|
     sed("#{ENV['SDK_HOME']}/.travis.yml", '', "=#{flavor}\\ ", '', 'd')
     sed("#{ENV['SDK_HOME']}/.travis.yml", '', "=#{flavor}$", '', 'd')
     sed("#{ENV['SDK_HOME']}/circle.yml", '', "\\[#{flavor}\\]", '', 'd')
-    `git rm -r #{flavor}`
+    puts "Please run 'git rm -r #{flavor}' to complete the wipe."
   when 'N'
     puts 'aborting the task...'
   end
