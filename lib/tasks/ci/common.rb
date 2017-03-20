@@ -286,8 +286,8 @@ namespace :ci do
       t.reenable
     end
 
-    task :install do |t|
-      section('INSTALL')
+    task :install, [:flavor] do |t, attr|
+      flavor = attr[:flavor]
       use_venv = in_venv
       pip_command = use_venv ? 'venv/bin/pip' : 'pip'
       sdk_dir = ENV['SDK_HOME'] || Dir.pwd
@@ -303,8 +303,13 @@ namespace :ci do
                            "--cache-dir #{ENV['PIP_CACHE']}",
                            "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
 
-      reqs = Dir.glob(File.join(sdk_dir, '**/requirements.txt')).reject do |path|
-        !%r{#{sdk_dir}/embedded/.*$}.match(path).nil? || !%r{#{sdk_dir}\/venv\/.*$}.match(path).nil?
+      flavor_file = File.join(sdk_dir, "#{flavor}/requirements.txt")
+      if flavor && File.exist?(flavor_file)
+        reqs = [flavor_file]
+      else
+        reqs = Dir.glob(File.join(sdk_dir, '**/requirements.txt')).reject do |path|
+          !%r{#{sdk_dir}/embedded/.*$}.match(path).nil? || !%r{#{sdk_dir}\/venv\/.*$}.match(path).nil?
+        end
       end
 
       reqs.each do |req|
