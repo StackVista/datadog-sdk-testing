@@ -57,22 +57,11 @@ def in_venv
   ENV['RUN_VENV'] && ENV['RUN_VENV'] == 'true' ? true : false
 end
 
-def install_req(requirement, pip_options = nil, output = nil, use_venv = nil)
+def install_requirements(req_file, pip_options = nil, output = nil, use_venv = nil)
   pip_command = use_venv ? "#{ENV['SDK_HOME']}/venv/bin/pip" : 'pip'
   redirect_output = output ? "2>&1 >> #{output}" : ''
   pip_options = '' if pip_options.nil?
-  return true if requirement.empty? || requirement.start_with?('#')
-  sh %(#{pip_command} install #{requirement} #{pip_options} #{redirect_output}\
-       || echo 'Unable to install #{requirement}' #{redirect_output})
-end
-
-def install_requirements(req_file, pip_options = nil, output = nil, use_venv = nil)
-  File.exist?(req_file) && File.open(req_file, 'r') do |f|
-    f.each_line do |line|
-      line.strip!
-      install_req(line, pip_options, output, use_venv)
-    end
-  end
+  sh "#{pip_command} install -r #{req_file} #{pip_options} #{redirect_output}"
 end
 
 def test_files(sdk_dir)
@@ -296,21 +285,18 @@ namespace :ci do
       install_requirements('requirements.txt',
                            "--cache-dir #{ENV['PIP_CACHE']}",
                            "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
-      install_requirements('requirements-opt.txt',
-                           "--upgrade --cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
       install_requirements('requirements-test.txt',
                            "--cache-dir #{ENV['PIP_CACHE']}",
                            "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
 
-      flavor_file = File.join(sdk_dir, "#{flavor}/requirements.txt")
-      if flavor && File.exist?(flavor_file)
-        reqs = [flavor_file]
-      else
-        reqs = Dir.glob(File.join(sdk_dir, '**/requirements.txt')).reject do |path|
-          !%r{#{sdk_dir}/embedded/.*$}.match(path).nil? || !%r{#{sdk_dir}\/venv\/.*$}.match(path).nil?
-        end
-      end
+      flavor_file = "#{flavor}/requirements.txt"
+      reqs = if flavor && File.exist?(flavor_file)
+               [flavor_file]
+             else
+               Dir.glob(File.join(sdk_dir, '**/requirements.txt')).reject do |path|
+                 !%r{#{sdk_dir}/embedded/.*$}.match(path).nil? || !%r{#{sdk_dir}\/venv\/.*$}.match(path).nil?
+               end
+             end
 
       reqs.each do |req|
         install_requirements(req,
