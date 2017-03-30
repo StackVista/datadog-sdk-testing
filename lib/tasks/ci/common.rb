@@ -276,6 +276,8 @@ namespace :ci do
     end
 
     task :install, [:flavor] do |t, attr|
+      section('INSTALL')
+
       flavor = attr[:flavor]
       use_venv = in_venv
       pip_command = use_venv ? 'venv/bin/pip' : 'pip'
