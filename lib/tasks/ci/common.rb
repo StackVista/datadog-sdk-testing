@@ -284,9 +284,6 @@ namespace :ci do
       sdk_dir = ENV['SDK_HOME'] || Dir.pwd
 
       sh %(#{'python -m ' if Gem.win_platform?}#{pip_command} install --upgrade pip setuptools)
-      install_requirements('requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
       install_requirements('requirements-test.txt',
                            "--cache-dir #{ENV['PIP_CACHE']}",
                            "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)

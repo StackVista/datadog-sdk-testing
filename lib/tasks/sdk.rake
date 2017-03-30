@@ -26,7 +26,6 @@ task 'setup_env' do
   `wget -q -O #{ENV['SDK_HOME']}/venv/get-pip.py https://bootstrap.pypa.io/get-pip.py`
   `#{ENV['SDK_HOME']}/venv/bin/python #{ENV['SDK_HOME']}/venv/get-pip.py`
   # these files should be part of the SDK repos (integrations-{core, extra}
-  `venv/bin/pip install -r #{ENV['SDK_HOME']}/requirements.txt` if File.exist?('requirements.txt')
   `venv/bin/pip install -r #{ENV['SDK_HOME']}/requirements-test.txt` if File.exist?('requirements-test.txt')
   # These deps are not really needed, so we ignore failures
   ENV['PIP_COMMAND'] = "#{ENV['SDK_HOME']}/venv/bin/pip"
