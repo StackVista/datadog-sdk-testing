@@ -25,4 +25,8 @@ Gem::Specification.new do |s|
                      'LICENSE']
   s.homepage      = 'http://rubygems.org/gems/datadog-sdk-testing'
   s.license       = 'MIT'
+  s.add_runtime_dependency 'colorize'
+  s.add_runtime_dependency 'httparty'
+  s.add_runtime_dependency 'rake'
+  s.add_runtime_dependency 'rubocop'
 end
