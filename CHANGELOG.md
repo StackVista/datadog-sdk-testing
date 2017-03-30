@@ -1,5 +1,19 @@
 # CHANGELOG
 
+0.6.0/ 2017.03.30
+=================
+
+### Changes
+
+* [improvement] Clean setuptools remain after setup\_env. See [#48][].
+* [improvement] Handle GNU sed on Mac. See [#50][].
+* [improvement] Add an option in the skeleton to skip tests. See [#51][].
+* [improvement] Faster requirements install. See [#54][].
+* [improvement] Faster requirements install in the skeleton. See [#55][].
+* [improvement] Declare the gem dependencies in the gemspec. See [#56][].
+* [other] Do not call git for the user. See [#50][].
+* [other] Do not suggest using the constructor in the skeleton. See [#52][].
+
 0.5.1/ 2017.02.14
 ==================
 
@@ -225,5 +239,12 @@
 [#45]: https://github.com/DataDog/datadog-sdk-testing/issues/45
 [#46]: https://github.com/DataDog/datadog-sdk-testing/issues/46
 [#47]: https://github.com/DataDog/datadog-sdk-testing/issues/47
+[#48]: https://github.com/DataDog/datadog-sdk-testing/issues/48
+[#50]: https://github.com/DataDog/datadog-sdk-testing/issues/50
+[#51]: https://github.com/DataDog/datadog-sdk-testing/issues/51
+[#52]: https://github.com/DataDog/datadog-sdk-testing/issues/52
+[#54]: https://github.com/DataDog/datadog-sdk-testing/issues/54
+[#55]: https://github.com/DataDog/datadog-sdk-testing/issues/55
+[#56]: https://github.com/DataDog/datadog-sdk-testing/issues/56
 [@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi
