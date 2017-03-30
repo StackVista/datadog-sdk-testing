@@ -1,5 +1,13 @@
 # CHANGELOG
 
+0.6.1/ 2017.03.30
+=================
+
+### Changes
+
+* [bugfix] re-add INSTALL section. See [#57][]
+* [other] do not install integrations-* requirements.txt. See [#57][]
+
 0.6.0/ 2017.03.30
 =================
 
@@ -246,5 +254,6 @@
 [#54]: https://github.com/DataDog/datadog-sdk-testing/issues/54
 [#55]: https://github.com/DataDog/datadog-sdk-testing/issues/55
 [#56]: https://github.com/DataDog/datadog-sdk-testing/issues/56
+[#57]: https://github.com/DataDog/datadog-sdk-testing/issues/57
 [@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi
