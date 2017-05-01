@@ -120,6 +120,10 @@ desc 'Find requirements conflicts'
 task 'requirements' => ['ci:default:requirements'] do
 end
 
+desc 'Check that requirements files are properly structured'
+task 'requirements_file' => ['ci:default:requirements_file'] do
+end
+
 namespace :generate do
   desc 'Setup a development environment for the SDK'
   task :skeleton, :option do |_, args|
@@ -163,4 +167,4 @@ namespace :ci do
   end
 end
 
-task default: ['lint', 'ci:run']
+task default: ['lint', 'requirements_file', 'ci:run']
