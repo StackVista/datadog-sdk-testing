@@ -59,7 +59,7 @@ namespace :ci do
         f.close
       end
 
-      if !violations.empty?
+      unless violations.empty?
         violations.each do |violation|
           p "violation found: #{violation}"
         end
