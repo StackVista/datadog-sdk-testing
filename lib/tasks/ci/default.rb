@@ -58,14 +58,12 @@ namespace :ci do
         reqs[reqs.length - 1] != "\n" && violations.push(req_file_path)
         f.close
       end
-
       unless violations.empty?
         violations.each do |violation|
           p "violation found: #{violation}"
         end
         raise 'requirements files all must end with a newline.'
       end
-
     end
 
     task script: ['ci:common:script', :coverage, :lint] do
