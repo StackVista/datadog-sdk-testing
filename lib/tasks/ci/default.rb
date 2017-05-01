@@ -55,17 +55,15 @@ namespace :ci do
       req_file_paths.each do |req_file_path|
         f = File.open(req_file_path, 'r')
         reqs = f.read
-        if reqs[reqs.length - 1] != "\n"
-          violations.push(req_file_path)
-        end
+        reqs[reqs.length - 1] != "\n" && violations.push(req_file_path)
         f.close
       end
 
-      if violations.length != 0
+      if !violations.empty?
         violations.each do |violation|
           p "violation found: #{violation}"
         end
-        raise "requirements files all must end with a newline."
+        raise 'requirements files all must end with a newline.'
       end
 
     end
