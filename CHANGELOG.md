@@ -1,5 +1,12 @@
 # CHANGELOG
 
+0.7.2/ 2017.05.30
+=================
+
+### Changes
+
+* [bugfix][libs] agent has it's own bundle, run agent rake with it. See [#61][]
+
 0.7.1/ 2017.05.30
 =================
 
@@ -272,5 +279,6 @@
 [#57]: https://github.com/DataDog/datadog-sdk-testing/issues/57
 [#59]: https://github.com/DataDog/datadog-sdk-testing/issues/59
 [#60]: https://github.com/DataDog/datadog-sdk-testing/issues/60
+[#61]: https://github.com/DataDog/datadog-sdk-testing/issues/61
 [@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi
