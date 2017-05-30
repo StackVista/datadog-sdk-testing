@@ -1,5 +1,13 @@
 # CHANGELOG
 
+0.7.0/ 2017.05.30
+=================
+
+### Changes
+
+* [feature] Add helpers to dev/CI environments to grab libs. See #60
+* [bugfix] Checks if a requirements ends with a new line. See #59
+
 0.6.1/ 2017.03.30
 =================
 
