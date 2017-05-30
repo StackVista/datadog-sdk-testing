@@ -5,7 +5,7 @@
 require 'rake/clean'
 require 'rubocop/rake_task'
 require 'bundler'
-require 'english'
+require 'English'
 
 # Flavored Travis CI jobs
 require 'ci/default'
