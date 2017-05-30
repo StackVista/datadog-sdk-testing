@@ -1,12 +1,19 @@
 # CHANGELOG
 
+0.7.1/ 2017.05.30
+=================
+
+### Changes
+
+* [bugfix] english should be English in case-sensitive FS's.
+
 0.7.0/ 2017.05.30
 =================
 
 ### Changes
 
-* [feature] Add helpers to dev/CI environments to grab libs. See #60
-* [bugfix] Checks if a requirements ends with a new line. See #59
+* [feature] Add helpers to dev/CI environments to grab libs. See [#60][]
+* [bugfix] Checks if a requirements ends with a new line. See [#59][]
 
 0.6.1/ 2017.03.30
 =================
@@ -263,5 +270,7 @@
 [#55]: https://github.com/DataDog/datadog-sdk-testing/issues/55
 [#56]: https://github.com/DataDog/datadog-sdk-testing/issues/56
 [#57]: https://github.com/DataDog/datadog-sdk-testing/issues/57
+[#59]: https://github.com/DataDog/datadog-sdk-testing/issues/59
+[#60]: https://github.com/DataDog/datadog-sdk-testing/issues/60
 [@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi
