@@ -5,6 +5,7 @@
 require 'rake/clean'
 require 'rubocop/rake_task'
 require 'bundler'
+require 'english'
 
 # Flavored Travis CI jobs
 require 'ci/default'
@@ -37,6 +38,16 @@ task 'setup_env' do
   `cp #{gem_home}/lib/config/datadog.conf #{ENV['SDK_HOME']}/embedded/dd-agent/datadog.conf`
   # This sometimes causes check setup to fail
   FileUtils.rm Dir.glob('setuptools*.zip')
+end
+
+desc 'Grab latest external dd-agent libraries'
+task 'setup_agent_libs' do
+  check_env
+  agent_dir = in_ci_env ? "#{ENV['HOME']}/dd-agent/" : "#{ENV['SDK_HOME']}/embedded/dd-agent/"
+
+  `cd  #{agent_dir} && rake -T | grep setup_libs > /dev/null 2>&1`
+  next if $CHILD_STATUS.exitstatus != 0
+  `cd #{agent_dir} && rake setup_libs`
 end
 
 desc 'Clean development environment for the SDK (remove!)'
@@ -154,7 +165,7 @@ namespace :ci do
     puts 'Assuming you are running these tests locally' unless ENV['TRAVIS']
     flavor = args[:flavor] || ENV['TRAVIS_FLAVOR'] || 'default'
     can_skip, checks = can_skip?
-    can_skip &&= !%w(default).include?(flavor)
+    can_skip &&= !%w[default].include?(flavor)
 
     flavors = flavor.split(',')
     flavors.each do |f|
