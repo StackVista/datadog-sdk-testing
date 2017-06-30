@@ -346,7 +346,7 @@ namespace :ci do
       flavors_group = flavors.join('|')
       unless flavors.include?('default')
         tests_directory = tests_directory.reject do |test|
-          /.*(#{flavors_group}).*$/.match(test).nil?
+          %r{.*/(#{flavors_group})/.*$}.match(test).nil?
         end
       end
       # Rake on Windows doesn't support setting the var at the beginning of the
