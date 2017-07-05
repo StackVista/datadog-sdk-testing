@@ -1,5 +1,14 @@
 # CHANGELOG
 
+0.7.3/ 2017.06.30
+=================
+
+### Changes
+
+* [bugfix] do an exact match of the check name when running tests. See [#64][]
+* [improvement] check for python2 when setting up the environment. See [#63][]
+* [improvement] show the output from the subtask invoked. See [#62][]
+
 0.7.2/ 2017.05.30
 =================
 
@@ -280,5 +289,8 @@
 [#59]: https://github.com/DataDog/datadog-sdk-testing/issues/59
 [#60]: https://github.com/DataDog/datadog-sdk-testing/issues/60
 [#61]: https://github.com/DataDog/datadog-sdk-testing/issues/61
+[#62]: https://github.com/DataDog/datadog-sdk-testing/issues/62
+[#63]: https://github.com/DataDog/datadog-sdk-testing/issues/63
+[#64]: https://github.com/DataDog/datadog-sdk-testing/issues/64
 [@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi

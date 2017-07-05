@@ -1,9 +1,9 @@
 Gem::Specification.new do |s|
   s.name          = 'datadog-sdk-testing'
-  s.version       = '0.7.2'
+  s.version       = '0.7.3'
   s.summary       = 'Datadog Integration SDK testing/scaffolding facilities.'
   s.description   = 'Datadog Integration SDK testing/scaffolding gem'
-  s.authors       = ['Jaime Fullaondo']
+  s.authors       = ['Jaime Fullaondo', 'Greg Meyer', 'Quentin Madec', 'Hippolyte Henry']
   s.email         = 'jaime.fullaondo@datadoghq.com'
   s.require_paths = ['lib/tasks/']
   s.files         = ['lib/tasks/sdk.rake',
