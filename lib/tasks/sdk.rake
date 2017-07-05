@@ -19,6 +19,7 @@ CLOBBER.include '**/*.pyc'
 desc 'Setup a development environment for the SDK'
 task 'setup_env' do
   check_env
+  raise 'python2.7 is a requirement (python2 symlink too) - cant setup the env' unless bin_in_path?('python2')
   `mkdir -p #{ENV['SDK_HOME']}/venv`
   `wget -q -O #{ENV['SDK_HOME']}/venv/virtualenv.py https://raw.github.com/pypa/virtualenv/1.11.6/virtualenv.py`
   `python #{ENV['SDK_HOME']}/venv/virtualenv.py -p python2 --no-site-packages --no-pip --no-setuptools #{ENV['SDK_HOME']}/venv/`

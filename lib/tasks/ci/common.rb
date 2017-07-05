@@ -12,6 +12,10 @@ def check_env
   abort 'SDK_HOME env variable must be defined in your Rakefile to used this gem.' unless ENV['SDK_HOME']
 end
 
+def bin_in_path?(binary)
+  ENV['PATH'].split(':').collect { |d| Dir.entries d if Dir.exist? d }.flatten.include? binary
+end
+
 def in_ci_env
   ENV['TRAVIS'] || ENV['CIRCLECI']
 end
