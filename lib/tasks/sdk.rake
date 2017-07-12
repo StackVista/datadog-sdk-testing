@@ -39,6 +39,8 @@ task 'setup_env' do
   `cp #{gem_home}/lib/config/datadog.conf #{ENV['SDK_HOME']}/embedded/dd-agent/datadog.conf`
   # This sometimes causes check setup to fail
   FileUtils.rm Dir.glob('setuptools*.zip')
+  # Download JMX Fetch, too
+  Rake::Task['setup_agent_libs'].invoke
 end
 
 desc 'Grab latest external dd-agent libraries'
