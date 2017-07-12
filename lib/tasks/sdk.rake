@@ -142,6 +142,11 @@ desc 'Check that requirements files are properly structured'
 task 'requirements_file' => ['ci:default:requirements_file'] do
 end
 
+desc 'Execute command in SDK environment'
+task :exec, :command do |_, args|
+  exec(ENV, args[:command])
+end
+
 namespace :generate do
   desc 'Setup a development environment for the SDK'
   task :skeleton, :option do |_, args|
