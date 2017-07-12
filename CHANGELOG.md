@@ -1,5 +1,13 @@
 # CHANGELOG
 
+0.7.4/ 2017.07.12
+=================
+
+### Changes
+
+* [bugfix] Setup JMX Fetch With Agent Setup. See [#66][]
+* [improvement] Add `exec` task to run commands in the SDK environment. See [#67][]
+
 0.7.3/ 2017.06.30
 =================
 
@@ -292,5 +300,7 @@
 [#62]: https://github.com/DataDog/datadog-sdk-testing/issues/62
 [#63]: https://github.com/DataDog/datadog-sdk-testing/issues/63
 [#64]: https://github.com/DataDog/datadog-sdk-testing/issues/64
+[#66]: https://github.com/DataDog/datadog-sdk-testing/issues/66
+[#67]: https://github.com/DataDog/datadog-sdk-testing/issues/67
 [@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi
