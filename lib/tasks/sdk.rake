@@ -36,7 +36,7 @@ task 'setup_env' do
   `#{ENV['SDK_HOME']}/venv/bin/pip install -r #{ENV['SDK_HOME']}/embedded/dd-agent/requirements.txt`
   `echo "#{ENV['SDK_HOME']}/embedded/dd-agent/" > #{ENV['SDK_HOME']}/venv/lib/python2.7/site-packages/datadog-agent.pth`
   gem_home = Bundler.rubygems.find_name('datadog-sdk-testing').first.full_gem_path
-  `cp #{gem_home}/lib/config/datadog.conf #{ENV['SDK_HOME']}/embedded/dd-agent/datadog.conf`
+  `cp #{gem_home}/lib/config/stackstate.conf #{ENV['SDK_HOME']}/embedded/dd-agent/stackstate.conf`
   # This sometimes causes check setup to fail
   FileUtils.rm Dir.glob('setuptools*.zip')
   # Download JMX Fetch, too
