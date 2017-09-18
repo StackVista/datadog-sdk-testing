@@ -1,5 +1,66 @@
 # CHANGELOG
 
+0.7.4/ 2017.07.12
+=================
+
+### Changes
+
+* [bugfix] Setup JMX Fetch With Agent Setup. See [#66][]
+* [improvement] Add `exec` task to run commands in the SDK environment. See [#67][]
+
+0.7.3/ 2017.06.30
+=================
+
+### Changes
+
+* [bugfix] do an exact match of the check name when running tests. See [#64][]
+* [improvement] check for python2 when setting up the environment. See [#63][]
+* [improvement] show the output from the subtask invoked. See [#62][]
+
+0.7.2/ 2017.05.30
+=================
+
+### Changes
+
+* [bugfix][libs] agent has it's own bundle, run agent rake with it. See [#61][]
+
+0.7.1/ 2017.05.30
+=================
+
+### Changes
+
+* [bugfix] english should be English in case-sensitive FS's.
+
+0.7.0/ 2017.05.30
+=================
+
+### Changes
+
+* [feature] Add helpers to dev/CI environments to grab libs. See [#60][]
+* [bugfix] Checks if a requirements ends with a new line. See [#59][]
+
+0.6.1/ 2017.03.30
+=================
+
+### Changes
+
+* [bugfix] re-add INSTALL section. See [#57][]
+* [other] do not install integrations-* requirements.txt. See [#57][]
+
+0.6.0/ 2017.03.30
+=================
+
+### Changes
+
+* [improvement] Clean setuptools remain after setup\_env. See [#48][].
+* [improvement] Handle GNU sed on Mac. See [#50][].
+* [improvement] Add an option in the skeleton to skip tests. See [#51][].
+* [improvement] Faster requirements install. See [#54][].
+* [improvement] Faster requirements install in the skeleton. See [#55][].
+* [improvement] Declare the gem dependencies in the gemspec. See [#56][].
+* [other] Do not call git for the user. See [#50][].
+* [other] Do not suggest using the constructor in the skeleton. See [#52][].
+
 0.5.1/ 2017.02.14
 ==================
 
@@ -225,5 +286,21 @@
 [#45]: https://github.com/DataDog/datadog-sdk-testing/issues/45
 [#46]: https://github.com/DataDog/datadog-sdk-testing/issues/46
 [#47]: https://github.com/DataDog/datadog-sdk-testing/issues/47
+[#48]: https://github.com/DataDog/datadog-sdk-testing/issues/48
+[#50]: https://github.com/DataDog/datadog-sdk-testing/issues/50
+[#51]: https://github.com/DataDog/datadog-sdk-testing/issues/51
+[#52]: https://github.com/DataDog/datadog-sdk-testing/issues/52
+[#54]: https://github.com/DataDog/datadog-sdk-testing/issues/54
+[#55]: https://github.com/DataDog/datadog-sdk-testing/issues/55
+[#56]: https://github.com/DataDog/datadog-sdk-testing/issues/56
+[#57]: https://github.com/DataDog/datadog-sdk-testing/issues/57
+[#59]: https://github.com/DataDog/datadog-sdk-testing/issues/59
+[#60]: https://github.com/DataDog/datadog-sdk-testing/issues/60
+[#61]: https://github.com/DataDog/datadog-sdk-testing/issues/61
+[#62]: https://github.com/DataDog/datadog-sdk-testing/issues/62
+[#63]: https://github.com/DataDog/datadog-sdk-testing/issues/63
+[#64]: https://github.com/DataDog/datadog-sdk-testing/issues/64
+[#66]: https://github.com/DataDog/datadog-sdk-testing/issues/66
+[#67]: https://github.com/DataDog/datadog-sdk-testing/issues/67
 [@ksauzz]: https://github.com/ksauzz
 [@lastmikoi]: https://github.com/lastmikoi

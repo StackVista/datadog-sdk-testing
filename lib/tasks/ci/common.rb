@@ -12,18 +12,22 @@ def check_env
   abort 'SDK_HOME env variable must be defined in your Rakefile to used this gem.' unless ENV['SDK_HOME']
 end
 
+def bin_in_path?(binary)
+  ENV['PATH'].split(':').collect { |d| Dir.entries d if Dir.exist? d }.flatten.include? binary
+end
+
+def in_ci_env
+  ENV['TRAVIS'] || ENV['CIRCLECI']
+end
+
 def travis_circle_env
-  abort 'You are not in a Travis/Circle CI environment, this task wont apply.' if !ENV['TRAVIS'] && !ENV['CIRCLECI']
+  abort 'You are not in a Travis/Circle CI environment, this task wont apply.' unless in_ci_env
 end
 
 def sed(source, op, a, b, mods)
   cmd = "#{op}/#{a}"
   cmd = "#{cmd}/#{b}" unless b.nil? || b.empty?
-  if RUBY_PLATFORM.include? 'darwin'
-    sh "sed -i '' \"#{cmd}/#{mods}\" #{source}"
-  else
-    sh "sed -i \"#{cmd}/#{mods}\" #{source}"
-  end
+  sh "sed -i '' \"#{cmd}/#{mods}\" #{source} || sed -i \"#{cmd}/#{mods}\" #{source}"
 end
 
 def sleep_for(secs)
@@ -61,22 +65,11 @@ def in_venv
   ENV['RUN_VENV'] && ENV['RUN_VENV'] == 'true' ? true : false
 end
 
-def install_req(requirement, pip_options = nil, output = nil, use_venv = nil)
+def install_requirements(req_file, pip_options = nil, output = nil, use_venv = nil)
   pip_command = use_venv ? "#{ENV['SDK_HOME']}/venv/bin/pip" : 'pip'
   redirect_output = output ? "2>&1 >> #{output}" : ''
   pip_options = '' if pip_options.nil?
-  return true if requirement.empty? || requirement.start_with?('#')
-  sh %(#{pip_command} install #{requirement} #{pip_options} #{redirect_output}\
-       || echo 'Unable to install #{requirement}' #{redirect_output})
-end
-
-def install_requirements(req_file, pip_options = nil, output = nil, use_venv = nil)
-  File.exist?(req_file) && File.open(req_file, 'r') do |f|
-    f.each_line do |line|
-      line.strip!
-      install_req(line, pip_options, output, use_venv)
-    end
-  end
+  sh "#{pip_command} install -r #{req_file} #{pip_options} #{redirect_output}"
 end
 
 def test_files(sdk_dir)
@@ -192,8 +185,6 @@ def create_skeleton(integration)
 
   replace_guid(integration.to_s)
 
-  sh "git add #{ENV['SDK_HOME']}/#{integration}/"
-
   add_travis_flavor(integration)
   add_circleci_flavor(integration)
 end
@@ -292,26 +283,27 @@ namespace :ci do
       t.reenable
     end
 
-    task :install do |t|
+    task :install, [:flavor] do |t, attr|
       section('INSTALL')
+
+      flavor = attr[:flavor]
       use_venv = in_venv
       pip_command = use_venv ? 'venv/bin/pip' : 'pip'
       sdk_dir = ENV['SDK_HOME'] || Dir.pwd
 
       sh %(#{'python -m ' if Gem.win_platform?}#{pip_command} install --upgrade pip setuptools)
-      install_requirements('requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
-      install_requirements('requirements-opt.txt',
-                           "--upgrade --cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
       install_requirements('requirements-test.txt',
                            "--cache-dir #{ENV['PIP_CACHE']}",
                            "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
 
-      reqs = Dir.glob(File.join(sdk_dir, '**/requirements.txt')).reject do |path|
-        !%r{#{sdk_dir}/embedded/.*$}.match(path).nil? || !%r{#{sdk_dir}\/venv\/.*$}.match(path).nil?
-      end
+      flavor_file = "#{flavor}/requirements.txt"
+      reqs = if flavor && File.exist?(flavor_file)
+               [flavor_file]
+             else
+               Dir.glob(File.join(sdk_dir, '**/requirements.txt')).reject do |path|
+                 !%r{#{sdk_dir}/embedded/.*$}.match(path).nil? || !%r{#{sdk_dir}\/venv\/.*$}.match(path).nil?
+               end
+             end
 
       reqs.each do |req|
         install_requirements(req,
@@ -358,7 +350,7 @@ namespace :ci do
       flavors_group = flavors.join('|')
       unless flavors.include?('default')
         tests_directory = tests_directory.reject do |test|
-          /.*(#{flavors_group}).*$/.match(test).nil?
+          %r{.*/(#{flavors_group})/.*$}.match(test).nil?
         end
       end
       # Rake on Windows doesn't support setting the var at the beginning of the

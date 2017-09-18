@@ -47,6 +47,25 @@ namespace :ci do
       sh "#{gem_home}/lib/tasks/ci/hooks/pre-commit.py"
     end
 
+    task :requirements_file do
+      check_env
+      violations = []
+      # The * is to match any other potential requirement files added later (e.g. requirements-opt)
+      req_file_paths = Dir.glob("#{ENV['SDK_HOME']}/*/requirements*.txt")
+      req_file_paths.each do |req_file_path|
+        f = File.open(req_file_path, 'r')
+        reqs = f.read
+        reqs[reqs.length - 1] != "\n" && violations.push(req_file_path)
+        f.close
+      end
+      unless violations.empty?
+        violations.each do |violation|
+          p "violation found: #{violation}"
+        end
+        raise 'requirements files all must end with a newline.'
+      end
+    end
+
     task script: ['ci:common:script', :coverage, :lint] do
       check_env
       Rake::Task['ci:common:run_tests'].invoke(['default'])
@@ -57,8 +76,7 @@ namespace :ci do
     task :execute do
       exception = nil
       begin
-        %w(before_install install before_script
-           script).each do |t|
+        %w[before_install install before_script script].each do |t|
           Rake::Task["#{flavor.scope.path}:#{t}"].invoke
         end
       rescue => e

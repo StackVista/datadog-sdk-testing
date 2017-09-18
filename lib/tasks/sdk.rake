@@ -1,9 +1,11 @@
 #!/usr/bin/env rake
 # encoding: utf-8
+
 # 3p
 require 'rake/clean'
 require 'rubocop/rake_task'
 require 'bundler'
+require 'English'
 
 # Flavored Travis CI jobs
 require 'ci/default'
@@ -17,6 +19,7 @@ CLOBBER.include '**/*.pyc'
 desc 'Setup a development environment for the SDK'
 task 'setup_env' do
   check_env
+  raise 'python2.7 is a requirement (python2 symlink too) - cant setup the env' unless bin_in_path?('python2')
   `mkdir -p #{ENV['SDK_HOME']}/venv`
   `wget -q -O #{ENV['SDK_HOME']}/venv/virtualenv.py https://raw.github.com/pypa/virtualenv/1.11.6/virtualenv.py`
   `python #{ENV['SDK_HOME']}/venv/virtualenv.py -p python2 --no-site-packages --no-pip --no-setuptools #{ENV['SDK_HOME']}/venv/`
@@ -25,7 +28,6 @@ task 'setup_env' do
   `wget -q -O #{ENV['SDK_HOME']}/venv/get-pip.py https://bootstrap.pypa.io/get-pip.py`
   `#{ENV['SDK_HOME']}/venv/bin/python #{ENV['SDK_HOME']}/venv/get-pip.py`
   # these files should be part of the SDK repos (integrations-{core, extra}
-  `venv/bin/pip install -r #{ENV['SDK_HOME']}/requirements.txt` if File.exist?('requirements.txt')
   `venv/bin/pip install -r #{ENV['SDK_HOME']}/requirements-test.txt` if File.exist?('requirements-test.txt')
   # These deps are not really needed, so we ignore failures
   ENV['PIP_COMMAND'] = "#{ENV['SDK_HOME']}/venv/bin/pip"
@@ -35,6 +37,24 @@ task 'setup_env' do
   `echo "#{ENV['SDK_HOME']}/embedded/dd-agent/" > #{ENV['SDK_HOME']}/venv/lib/python2.7/site-packages/datadog-agent.pth`
   gem_home = Bundler.rubygems.find_name('datadog-sdk-testing').first.full_gem_path
   `cp #{gem_home}/lib/config/datadog.conf #{ENV['SDK_HOME']}/embedded/dd-agent/datadog.conf`
+  # This sometimes causes check setup to fail
+  FileUtils.rm Dir.glob('setuptools*.zip')
+  # Download JMX Fetch, too
+  Rake::Task['setup_agent_libs'].invoke
+end
+
+desc 'Grab latest external dd-agent libraries'
+task 'setup_agent_libs' do
+  check_env
+  agent_dir = in_ci_env ? "#{ENV['HOME']}/dd-agent/" : "#{ENV['SDK_HOME']}/embedded/dd-agent/"
+
+  Dir.chdir(agent_dir) do
+    `bundle install`
+    `bundle exec rake -T | grep setup_libs > /dev/null 2>&1`
+    raise "Rake task 'setup_libs' not found!" if $CHILD_STATUS.exitstatus != 0
+    # Use `sh` so we don't ingest standard output and error
+    sh 'bundle exec rake setup_libs'
+  end
 end
 
 desc 'Clean development environment for the SDK (remove!)'
@@ -68,7 +88,7 @@ task 'wipe', :option do |_, args|
     sed("#{ENV['SDK_HOME']}/.travis.yml", '', "=#{flavor}\\ ", '', 'd')
     sed("#{ENV['SDK_HOME']}/.travis.yml", '', "=#{flavor}$", '', 'd')
     sed("#{ENV['SDK_HOME']}/circle.yml", '', "\\[#{flavor}\\]", '', 'd')
-    `git rm -r #{flavor}`
+    puts "Please run 'git rm -r #{flavor}' to complete the wipe."
   when 'N'
     puts 'aborting the task...'
   end
@@ -118,6 +138,15 @@ desc 'Find requirements conflicts'
 task 'requirements' => ['ci:default:requirements'] do
 end
 
+desc 'Check that requirements files are properly structured'
+task 'requirements_file' => ['ci:default:requirements_file'] do
+end
+
+desc 'Execute command in SDK environment'
+task :exec, :command do |_, args|
+  exec(ENV, args[:command])
+end
+
 namespace :generate do
   desc 'Setup a development environment for the SDK'
   task :skeleton, :option do |_, args|
@@ -148,7 +177,7 @@ namespace :ci do
     puts 'Assuming you are running these tests locally' unless ENV['TRAVIS']
     flavor = args[:flavor] || ENV['TRAVIS_FLAVOR'] || 'default'
     can_skip, checks = can_skip?
-    can_skip &&= !%w(default).include?(flavor)
+    can_skip &&= !%w[default].include?(flavor)
 
     flavors = flavor.split(',')
     flavors.each do |f|
@@ -161,4 +190,4 @@ namespace :ci do
   end
 end
 
-task default: ['lint', 'ci:run']
+task default: ['lint', 'requirements_file', 'ci:run']
